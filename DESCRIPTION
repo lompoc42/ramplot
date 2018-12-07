@@ -1,0 +1,15 @@
+Package: RAMplot
+Type: Package
+Title: ReSolve Asset Management - Plotting Package
+Version: 0.1.0
+Author: Carl Ayala
+Maintainer: Carl Ayala <lompoc42@yahoo.com>
+Description: Financial plotting functions for ReSolve Asset Management
+License: GPL-3
+LazyData: true
+Depends:
+  ggplot2 (>= 3.0.0),
+  scales (>= 0.5.0),
+  bdscale (>= 2.0.0),
+  reshape2 (>= 1.4.2)
+RoxygenNote: 6.0.1
