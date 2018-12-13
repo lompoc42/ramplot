@@ -2,27 +2,23 @@
 % Please edit documentation in R/ram.correlation.plot.R
 \name{ram.correlation.plot}
 \alias{ram.correlation.plot}
-\title{ReSolve Correlation Heatmap Plotting Function}
+\title{ReSolve Correlation Plotting Function}
 \usage{
-ram.correlation.plot(dat, x.attributes = list(breaks = NULL, labs = NULL,
-  labs.tilt = F), y.attributes = list(breaks = NULL, labs = NULL, show.values
-  = F), titles = list(main = NULL, subtitle = NULL, legend.labels = NULL,
-  legend.rows = NULL, caption = NULL, x = NULL, y = NULL),
-  emphasis = list(emph.column = NULL, hline = NULL, hline.size = NULL,
-  hline.color = NULL, primary.column = 1, secondary.column = NULL, show.best.fit
-  = T, density = T))
+ram.correlation.plot(dat,...)
 }
 \arguments{
-\item{dat}{Input}
+\item{dat}{Data is assumed to be a matrix or vector of returns.}
 
-\item{x.attributes}{List: x axis modifiers}
-
-\item{y.attributes}{List: y axis modifiers}
-
-\item{titles}{List: plot titles}
-
-\item{emphasis}{List: emphasis arguments}
+\item{...}{Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}}
 }
 \description{
-Base plotting function.
+Base Plotting Functions: Correlation and Density
+}
+\examples{
+
+# The function will call the correlation plot by default.
+# The density plot is called as follows
+
+ram.bar.plot(dat,emphasis=list(density=T))
+
 }

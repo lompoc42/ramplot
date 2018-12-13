@@ -2,13 +2,13 @@
 % Please edit documentation in R/ram.dat.standard.R
 \name{ram.dat.standard}
 \alias{ram.dat.standard}
-\title{ReSolve Data Standardizing Function}
+\title{ReSolve Data Standarizing Function}
 \usage{
 ram.dat.standard(dat)
 }
 \arguments{
-\item{dat}{Input data source}
+\item{dat}{User input.}
 }
 \description{
-Takes an input and conforms it to RAM standards
+Transforms input into a standardized form for use with ReSolve specific functions. It is primarily looking for time series data within the input which will return an xts object. If none is found the function will utilize a data.frame instead. If no usable data is found in the input, NA is returned.
 }

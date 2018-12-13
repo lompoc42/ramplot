@@ -1,9 +1,67 @@
 #' @title ReSolve Argument Check
 #'
-#' @description Internal function to check argument validity across plotting functions.
+#' @description This is the arguments module for the plotting functions. The user passes on arguments under the 'umbrella' type which are then passed to the base plot function being called. This function also serves to guard against invalid argument parameters with a few basic use cases.
+#'
+#' @usage ram.arguments('type', ...)
+#'
 #' @param type selection: 'base' and 'umbrella' are the options
-#' @param user.args list: user argument list to check against for validity.
+#' @param ... The complete user list of arguments:
+#'
+#'\describe{
+#'
+#'  \item{\emph{x.attributes}}{
+#'   \enumerate{
+#'     \item{show.day = F}{}
+#'     \item{break = NULL}{}
+#'     \item{labs = NULL}{}
+#'     \item{labs.tilt = F}{}
+#'   }
+#'  }
+#'
+#'  \item{\emph{y.attributes}}{
+#'   \enumerate{
+#'     \item{start.val = 100}{}
+#'     \item{breaks = NULL}{}
+#'     \item{labs = NULL}{}
+#'     \item{trans.log = T}{}
+#'     \item{trans.percent = F}{}
+#'     \item{show.values = F}{}
+#'     \item{currency = '$'}{}
+#'   }
+#'  }
+#'
+#'  \item{\emph{titles}}{
+#'   \enumerate{
+#'     \item{main = NULL}{}
+#'     \item{subtitle = NULL}{}
+#'     \item{legend.labels = NULL}{}
+#'     \item{legend.rows = NULL}{}
+#'     \item{caption = NULL}{}
+#'     \item{x = NULL}{}
+#'     \item{y = NULL}{}
+#'     \item{rounding = 1}{}
+#'   }
+#'  }
+#'
+#'  \item{\emph{emphasis}}{
+#'   \enumerate{
+#'     \item{emph.column = NULL}{}
+#'     \item{hline = NULL}{}
+#'     \item{hline.size = NULL}{}
+#'     \item{hline.color = NULL}{}
+#'     \item{primary.column = 1}{}
+#'     \item{secondary.column = NULL}{}
+#'     \item{show.best.fit = NULL}{}
+#'     \item{waterfall = F}{}
+#'     \item{ring = F}{}
+#'     \item{density = F}{}
+#'   }
+#'  }
+#'
+#'}
+#'
 #' @return NULL
+#'
 #'
 
 ram.arguments = function(type='base',user.args){

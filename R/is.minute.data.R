@@ -1,7 +1,7 @@
-#' @title ReSolve minute data detection
+#' @title ReSolve minute data detection. Internal only.
 #'
-#' @description Logical output function for minute data
-#' @param dat Input data source
+#' @description Logical output function for minute data.
+#' @param dat xts object
 #' @return NULL
 #'
 is.minute.data = function(dat){

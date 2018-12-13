@@ -1,14 +1,32 @@
 #' @title ReSolve Umbrella Plotting Function
 #'
-#' @description Main plotting function.
-#' @param dat Input
-#' @param plot.type Selection: 'equity','scatter','bar','waterfall','correlation','transition'
-#' @param start.date R formatted date input: Example 2000-12-31
-#' @param end.date R formatted date input: Example 2000-12-31
-#' @param x.attributes List: x axis modifiers
-#' @param y.attributes List: y axis modifiers
-#' @param titles List: plot titles
-#' @param emphasis List: emphasis arguments
+#' @description The umbrella plotting function for the RAMplot package. Data is assumed to be transformed appropriately for one of the following base plotting functions:
+#'\describe{
+#'  \item{\emph{:: equity}}{}
+#'  \item{\emph{:: scatter}}{}
+#'  \item{\emph{:: transition}}{}
+#'  \item{\emph{:: waterfall}}{}
+#'  \item{\emph{:: correlation}}{}
+#'  \item{\emph{:: density}}{}
+#'  \item{\emph{:: pie}}{}
+#'  \item{\emph{:: ring}}{}
+#'}
+#'
+#' @usage ram.plot(dat,'plot.type',...)
+#'
+#' See examples for argument use cases.
+#'
+#' @param dat Data input transformed for corresponding plot type.
+#' @param plot.type Selection: 'equity','scatter','bar','waterfall','correlation','transition','pie','ring','density'
+#' @param start.date R formatted date input: Example '2000-12-31'
+#' @param end.date R formatted date input: Example '2000-12-31'
+#' @param ... Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}
+#'
+#' @examples
+#'
+#' ## Arguments can be called individually within a list.
+#' ram.plot(dat,'equity',x.attributes=list(show.day=T))
+#'
 #' @return NULL
 #' @export
 #'

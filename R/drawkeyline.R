@@ -1,6 +1,6 @@
 #' @title ReSolve drawkeyline function. Internal.
 #'
-#' @description Formats the legend of scatterplot function properly
+#' @description Do not call separately
 #' @param data Input
 #' @param params Parameters
 #' @param size Sizes

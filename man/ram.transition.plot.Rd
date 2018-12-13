@@ -4,25 +4,13 @@
 \alias{ram.transition.plot}
 \title{ReSolve Transition Plotting Function}
 \usage{
-ram.transition.plot(dat, x.attributes = list(breaks = NULL, labs = NULL,
-  labs.tilt = F), y.attributes = list(breaks = NULL, labs = NULL, show.values
-  = F), titles = list(main = NULL, subtitle = NULL, legend.labels = NULL,
-  legend.rows = NULL, caption = NULL, x = NULL, y = NULL),
-  emphasis = list(emph.column = NULL, hline = NULL, hline.size = NULL,
-  hline.color = NULL, primary.column = 1, secondary.column = NULL, show.best.fit
-  = T))
+ram.transition.plot(dat,...)
 }
 \arguments{
-\item{dat}{Input}
+\item{dat}{Data is assumed to be a matrix or vector of rolling weights}
 
-\item{x.attributes}{List: x axis modifiers}
-
-\item{y.attributes}{List: y axis modifiers}
-
-\item{titles}{List: plot titles}
-
-\item{emphasis}{List: emphasis arguments}
+\item{...}{Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}}
 }
 \description{
-Base plotting function.
+Base Plotting Functions: Transition
 }

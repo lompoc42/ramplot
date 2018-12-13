@@ -1,11 +1,18 @@
 #' @title ReSolve Bar Plotting Function
 #'
-#' @description Base plotting function.
-#' @param dat Input
-#' @param x.attributes List: x axis modifiers
-#' @param y.attributes List: y axis modifiers
-#' @param titles List: plot titles
-#' @param emphasis List: emphasis arguments
+#' @description Base Plotting Functions: Bar and Waterfall
+#' @usage ram.bar.plot(dat,...)
+#'
+#' @param dat Data is assumed to be a matrix or vector of returns.
+#' @param ... Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}
+#'
+#' @examples
+#'
+#' ## The function will call the bar plot by default.
+#' ## The waterfall plot is called as follows
+#'
+#' ram.bar.plot(dat,emphasis=list(waterfall=T))
+#'
 #' @return NULL
 #' @export
 #'

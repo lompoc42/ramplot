@@ -2,27 +2,23 @@
 % Please edit documentation in R/ram.pie.plot.R
 \name{ram.pie.plot}
 \alias{ram.pie.plot}
-\title{ReSolve Bar Plotting Function}
+\title{ReSolve Pie Plotting Function}
 \usage{
-ram.pie.plot(dat, x.attributes = list(breaks = NULL, labs = NULL, labs.tilt =
-  F), y.attributes = list(breaks = NULL, labs = NULL, show.values = F),
-  titles = list(main = NULL, subtitle = NULL, legend.labels = NULL,
-  legend.rows = NULL, caption = NULL, x = NULL, y = NULL, rounding = 1),
-  emphasis = list(emph.column = NULL, hline = NULL, hline.size = NULL,
-  hline.color = NULL, primary.column = 1, secondary.column = NULL, show.best.fit
-  = T, waterfall = F))
+ram.pie.plot(dat,...)
 }
 \arguments{
-\item{dat}{Input}
+\item{dat}{Data is assumed to be a matrix or vector of weights}
 
-\item{x.attributes}{List: x axis modifiers}
-
-\item{y.attributes}{List: y axis modifiers}
-
-\item{titles}{List: plot titles}
-
-\item{emphasis}{List: emphasis arguments}
+\item{...}{Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}}
 }
 \description{
-Base plotting function.
+Base Plotting Functions: Pie and Ring
+}
+\examples{
+
+# The function will call the pie plot by default.
+# The ring plot is called as follows
+
+ram.bar.plot(dat,emphasis=list(ring=T))
+
 }

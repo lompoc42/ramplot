@@ -1,6 +1,6 @@
 #' @title ReSolve ggplot branding function
 #'
-#' @description Applies ReSolve branding to plots
+#' @description Returns a ReSolve branded theme for ggplot2 objects.
 #' @return NULL
 #'
 ram.theme = function(){

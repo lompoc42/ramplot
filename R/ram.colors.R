@@ -1,9 +1,45 @@
 #' @title ReSolve Color Function
 #'
-#' @description Takes a numerical or lookup input and returns color values for R
-#' @param n Number of colors to output. Max is 19.
-#' @param pcolor Primary Color. Default is ReSolve "dark blue."
-#' @param lookup Character input to lookup ReSolve specific color by chart name.
+#' @description This function will return back N number of R formatted colors within the ReSolve brand space. The colors will be approximately opposite the color wheel. Users may also call an R formatted color based on the palette choices.
+#'
+#' @usage ram.colors(n,pcolor,lookup)
+#'
+#' See examples for argument use cases.
+#'
+#' @param n Max color selection is 20.
+#' @param pcolor Starting color value. This will determine the palette returned to the user.
+#' @param lookup
+#'
+#' This argument will return an R formatted color based on a palette name. Below is the complete list of current palette names:
+#'
+#' \enumerate{
+#'   \item{'dark.blue'}{}
+#'   \item{'cian'}{}
+#'   \item{'cian.tint1'}{}
+#'   \item{'cian.tint2'}{}
+#'   \item{'grey2'}{}
+#'   \item{'prune'}{}
+#'   \item{'rose'}{}
+#'   \item{'mustard'}{}
+#'   \item{'purple'}{}
+#'   \item{'aqua1'}{}
+#'   \item{'aqua2'}{}
+#'   \item{'green'}{}
+#'   \item{'orange'}{}
+#'   \item{'rich.yellow'}{}
+#'   \item{'rich.olive.green'}{}
+#'   \item{'green2'}{}
+#'   \item{'grey1'}{}
+#'   \item{'black'}{}
+#'   \item{'grey3'}{}
+#'   \item{'slate'}{}
+#' }
+#'
+#' @examples
+#'
+#' ## To call a specific palette color.
+#' ram.colors(n=1,lookup='black')
+#'
 #' @return NULL
 #' @export
 #'

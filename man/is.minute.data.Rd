@@ -2,13 +2,13 @@
 % Please edit documentation in R/is.minute.data.R
 \name{is.minute.data}
 \alias{is.minute.data}
-\title{ReSolve minute data detection}
+\title{ReSolve minute data detection. Internal only.}
 \usage{
 is.minute.data(dat)
 }
 \arguments{
-\item{dat}{Input data source}
+\item{dat}{xts object}
 }
 \description{
-Logical output function for minute data
+Logical output function for minute data.
 }

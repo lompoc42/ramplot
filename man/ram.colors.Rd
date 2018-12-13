@@ -4,15 +4,46 @@
 \alias{ram.colors}
 \title{ReSolve Color Function}
 \usage{
-ram.colors(n = 1, pcolor = "#00488d", lookup = NULL)
+ram.colors(n,pcolor,lookup)
+
+See examples for argument use cases.
 }
 \arguments{
-\item{n}{Number of colors to output. Max is 19.}
+\item{n}{Max color selection is 20.}
 
-\item{pcolor}{Primary Color. Default is ReSolve "dark blue."}
+\item{pcolor}{Starting color value. This will determine the palette returned to the user.}
 
-\item{lookup}{Character input to lookup ReSolve specific color by chart name.}
+\item{lookup}{This argument will return an R formatted color based on a palette name. Below is the complete list of current palette names:
+
+\enumerate{
+  \item{'dark.blue'}{}
+  \item{'cian'}{}
+  \item{'cian.tint1'}{}
+  \item{'cian.tint2'}{}
+  \item{'grey2'}{}
+  \item{'prune'}{}
+  \item{'rose'}{}
+  \item{'mustard'}{}
+  \item{'purple'}{}
+  \item{'aqua1'}{}
+  \item{'aqua2'}{}
+  \item{'green'}{}
+  \item{'orange'}{}
+  \item{'rich.yellow'}{}
+  \item{'rich.olive.green'}{}
+  \item{'green2'}{}
+  \item{'grey1'}{}
+  \item{'black'}{}
+  \item{'grey3'}{}
+  \item{'slate'}{}
+}}
 }
 \description{
-Takes a numerical or lookup input and returns color values for R
+This function will return back N number of R formatted colors within the ReSolve brand space. The colors will be approximately opposite the color wheel. Users may also call an R formatted color based on the palette choices.
+}
+\examples{
+
+## To call a specific palette color.
+ram.colors(n=1,lookup='black')
+
 }

@@ -1,7 +1,10 @@
-#' @title ReSolve Data Standardizing Function
+#' @title ReSolve Data Standarizing Function
 #'
-#' @description Takes an input and conforms it to RAM standards
-#' @param dat Input data source
+#' @description Transforms input into a standardized form for use with ReSolve specific functions. It is primarily looking for time series data within the input which will return an xts object. If none is found the function will utilize a data.frame instead. If no usable data is found in the input, NA is returned.
+#'
+#' @usage ram.dat.standard(dat)
+#'
+#' @param dat User input.
 #' @return NULL
 #' @export
 #'

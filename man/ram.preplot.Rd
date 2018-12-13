@@ -2,15 +2,23 @@
 % Please edit documentation in R/ram.preplot.R
 \name{ram.preplot}
 \alias{ram.preplot}
-\title{ReSolve data preplot function}
+\title{ReSolve Plot Preparation Function}
 \usage{
-ram.preplot(dat, type = "standard")
+ram.preplot(dat, type)
 }
 \arguments{
-\item{dat}{Input data source}
+\item{dat}{User input.}
 
-\item{type}{Selection: 'standard', 'waterfall', and 'correlation' are valid options}
+\item{type}{The complete user list of preplot transforms:
+
+\enumerate{
+ \item{'standard'}{}
+ \item{'melt'}{ ## Corresponds to the density plot}
+ \item{'waterfall'}{}
+ \item{'correlation'}{}
+ \item{'pie'}{}
+}}
 }
 \description{
-Internal function which specifically formats an input for use base functions
+Transforms input into a specific format for use with base plotting functions.
 }

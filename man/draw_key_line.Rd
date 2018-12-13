@@ -14,5 +14,5 @@ draw_key_line(data, params, size)
 \item{size}{Sizes}
 }
 \description{
-Formats the legend of scatterplot function properly
+Do not call separately
 }

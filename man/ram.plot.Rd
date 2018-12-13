@@ -4,33 +4,37 @@
 \alias{ram.plot}
 \title{ReSolve Umbrella Plotting Function}
 \usage{
-ram.plot(dat, plot.type = "equity", start.date = NULL, end.date = NULL,
-  x.attributes = list(show.day = F, breaks = NULL, labs = NULL, labs.tilt =
-  F), y.attributes = list(start.val = 100, breaks = NULL, labs = NULL,
-  trans.log = T, trans.percent = F, show.values = F, currency = "$"),
-  titles = list(main = NULL, subtitle = NULL, legend.labels = NULL,
-  legend.rows = NULL, caption = NULL, x = NULL, y = NULL, rounding = 1),
-  emphasis = list(emph.column = NULL, hline = NULL, hline.size = NULL,
-  hline.color = NULL, primary.column = 1, secondary.column = NULL, show.best.fit
-  = T, waterfall = F, ring = F))
+ram.plot(dat,'plot.type',...)
+
+See examples for argument use cases.
 }
 \arguments{
-\item{dat}{Input}
+\item{dat}{Data input transformed for corresponding plot type.}
 
-\item{plot.type}{Selection: 'equity','scatter','bar','waterfall','correlation','transition'}
+\item{plot.type}{Selection: 'equity','scatter','bar','waterfall','correlation','transition','pie','ring','density'}
 
-\item{start.date}{R formatted date input: Example 2000-12-31}
+\item{start.date}{R formatted date input: Example '2000-12-31'}
 
-\item{end.date}{R formatted date input: Example 2000-12-31}
+\item{end.date}{R formatted date input: Example '2000-12-31'}
 
-\item{x.attributes}{List: x axis modifiers}
-
-\item{y.attributes}{List: y axis modifiers}
-
-\item{titles}{List: plot titles}
-
-\item{emphasis}{List: emphasis arguments}
+\item{...}{Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}}
 }
 \description{
-Main plotting function.
+The umbrella plotting function for the RAMplot package. Data is assumed to be transformed appropriately for one of the following base plotting functions:
+\describe{
+ \item{\emph{:: equity}}{}
+ \item{\emph{:: scatter}}{}
+ \item{\emph{:: transition}}{}
+ \item{\emph{:: waterfall}}{}
+ \item{\emph{:: correlation}}{}
+ \item{\emph{:: density}}{}
+ \item{\emph{:: pie}}{}
+ \item{\emph{:: ring}}{}
+}
+}
+\examples{
+
+## Arguments can be called individually within a list.
+ram.plot(dat,'equity',x.attributes=list(show.day=T))
+
 }

@@ -1,9 +1,22 @@
-#' @title ReSolve data preplot function
+#' @title ReSolve Plot Preparation Function
 #'
-#' @description Internal function which specifically formats an input for use base functions
-#' @param dat Input data source
-#' @param type Selection: 'standard', 'waterfall', and 'correlation' are valid options
+#' @description Transforms input into a specific format for use with base plotting functions.
+#'
+#' @usage ram.preplot(dat, type)
+#'
+#' @param dat User input.
+#' @param type The complete user list of preplot transforms:
+#'
+#'\enumerate{
+#'  \item{'standard'}{}
+#'  \item{'melt'}{ # Corresponds to the density plot}
+#'  \item{'waterfall'}{}
+#'  \item{'correlation'}{}
+#'  \item{'pie'}{}
+#'}
+#'
 #' @return NULL
+#' @export
 #'
 ram.preplot = function(dat, type='standard'){
 
