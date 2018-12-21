@@ -220,7 +220,6 @@ ram.scatter.plot = function(
   ## Plot: Add colors
   print(
     p +
-      scale_size_manual(values = line.sizes) +
       theme(legend.position = 'top', legend.title = element_blank()) +
       leg
   )

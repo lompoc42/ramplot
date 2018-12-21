@@ -264,7 +264,7 @@ ram.bar.plot = function(
   # theme(legend.position = 'top', legend.title = element_blank()) +
 
   print(
-    p + scale_size_manual(values = line.sizes) + leg
+    p + leg
   )
 
 }
