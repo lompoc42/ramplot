@@ -45,16 +45,16 @@
 #'
 ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
 
+  expand.cols = function(dm, n){
+    matrix(rep(dm, n), ncol = n)
+  }
+
+  expand.rows = function(dm, n){
+    t(expand.cols(dm, n))
+  }
+
   if(!is.null(lookup)){
     n = min(n,20)
-
-    expand.cols = function(dm, n){
-      matrix(rep(dm, n), ncol = n)
-    }
-
-    expand.rows = function(dm, n){
-      t(expand.cols(dm, n))
-    }
   }
 
   ac = c(
