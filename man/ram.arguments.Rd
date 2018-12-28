@@ -16,7 +16,7 @@ ram.arguments('type', ...)
  \item{\emph{x.attributes}}{
   \enumerate{
     \item{show.day = F}{}
-    \item{break = NULL}{}
+    \item{breaks = NULL}{}
     \item{labs = NULL}{}
     \item{labs.tilt = F}{}
   }

@@ -7,5 +7,5 @@
 ram.theme()
 }
 \description{
-Applies ReSolve branding to plots
+Returns a ReSolve branded theme for ggplot2 objects.
 }

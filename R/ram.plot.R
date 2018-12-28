@@ -264,7 +264,27 @@ ram.plot = function(
       x.attributes$labs = x.labs
       x.attributes$show.day = NULL
 
+    } else if (ifelse(!is.null(x.breaks)&is.null(x.labs),is.numeric(x.breaks)|is.timeBased(x.breaks),F)) {
+
+      if(is.timeBased(x.breaks)){
+        x.labs = x.breaks
+        x.breaks = as.numeric(which(dat$idx%in%x.breaks))
+      } else if (is.numeric(x.breaks)) {
+        x.labs = as.character(dat$idx)[x.breaks]
+      }
+
+      ## Data: Format for time based object
+      if(is.timeBased(dat$idx)){
+        x.format = ifelse(show.day,"%d %b %Y","%b %Y")
+        x.labs = as.character(format(x.labs, x.format))
+      }
+
+      x.attributes$breaks = x.breaks
+      x.attributes$labs = x.labs
+      x.attributes$show.day = NULL
+
     }
+
   } else if (plot.type%in%c('bar','waterfall')){
 
     ## Argument: x.attributes()

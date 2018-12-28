@@ -13,7 +13,7 @@ ram.preplot(dat, type)
 
 \enumerate{
  \item{'standard'}{}
- \item{'melt'}{ ## Corresponds to the density plot}
+ \item{'melt'}{ # Corresponds to the density plot}
  \item{'waterfall'}{}
  \item{'correlation'}{}
  \item{'pie'}{}
