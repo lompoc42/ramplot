@@ -285,26 +285,39 @@ ram.plot = function(
 
     }
 
+    ## Auto tilt x-axis labels when there's more than four breaks.
+    if(length(x.breaks)>4) x.attributes$labs.tilt = T
+
   } else if (plot.type%in%c('bar','waterfall')){
 
-    ## Argument: x.attributes()
-    x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
-    x.labels = x.attributes$labs # labs
+    ## This section deals with use-case of a data-frame input.
+    if(!is.data.frame(dat.raw)){
 
-    if(is.null(x.labels)){
-      if(plot.type=='bar'){
-        if(length(unique(year(dat$idx)))==nrow(dat)){
-          x.labels = as.character(year(dat$idx))
-        } else {
-          x.labels = format(dat$idx,'%Y-%b')
+      ## Argument: x.attributes()
+      x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
+      x.labels = x.attributes$labs # labs
+
+      if(is.null(x.labels)){
+        if(plot.type=='bar'){
+          if(length(unique(year(dat$idx)))==nrow(dat)){
+            x.labels = as.character(year(dat$idx))
+          } else {
+            x.labels = format(dat$idx,'%Y-%b')
+          }
+        } else if (plot.type=='waterfall') {
+          x.labels = as.character(dat$ids)
         }
-      } else if (plot.type=='waterfall') {
-        x.labels = as.character(dat$ids)
+      } else if (length(x.labels)==nrow(dat)) {
+        x.labels = as.character(x.labels)
+      } else {
+        x.labels = as.character(x.breaks)
       }
-    } else if (length(x.labels)==nrow(dat)) {
-      x.labels = as.character(x.labels)
     } else {
-      x.labels = as.character(x.breaks)
+
+      ## Argument: x.attributes()
+      x.labels = as.character(rownames(dat.raw)) # labs
+      x.breaks = dat$idx # Manual x.breaks not supported in barplot
+
     }
 
     x.attributes$breaks = x.breaks
@@ -337,11 +350,8 @@ ram.plot = function(
       ## Argument: y.attributes$trans.percent
     } else if (y.attributes$trans.percent) {
 
-      scaler = ram.scaler(dat.raw,100)
-      y.breaks = scaler$breaks
-      y.labs = round(scaler$labs/100-1,titles$rounding)
-      y.labs = paste0(comma(y.labs * 100), "%")
-      dmat[] = coredata(scaler$dat)
+      y.breaks = c(0,0.25,0.5,0.75,1)
+      y.labs = paste0(comma(y.breaks* 100), "%")
 
     } else {
 
