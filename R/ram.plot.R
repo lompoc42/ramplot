@@ -347,7 +347,7 @@ ram.plot = function(
       y.labs = scaler$labs
       dmat[] = coredata(scaler$dat)
 
-      ## Argument: y.attributes$trans.percent
+      ## Argument: y.attributes$trans.percent. Dat in [0,1]
     } else if (y.attributes$trans.percent) {
 
       y.breaks = c(0,0.25,0.5,0.75,1)
