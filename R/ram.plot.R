@@ -239,51 +239,50 @@ ram.plot = function(
   ## Argument: x.attributes
   show.day = x.attributes$show.day
   x.breaks = x.attributes$breaks
-  x.labs = x.attributes$labs
+  x.labels = x.attributes$labs
+  if(length(x.labels)!=length(x.breaks)) x.labels = NULL
+  if(!is.null(x.labels)) x.labels = as.character(x.labels)
 
   if(plot.type%in%c('equity','scatter','transition')){
-    if(
-      ## Condition: Checks out x.breaks and x.labs.
-      ifelse(is.null(x.breaks),T,
-             ifelse(is.null(x.labs),F,
-                    ifelse(length(x.labs)==length(x.breaks),F,T)))
-    ){
+
+    if(ifelse(is.null(x.breaks),T,ifelse(!is.numeric(x.breaks)&!is.timeBased(x.breaks),T,F))&is.null(x.labels)){
 
       ## Argument: x.attributes$breaks
       x.breaks = pretty(1:nrow(dat))
       x.breaks = x.breaks[x.breaks>0&x.breaks<nrow(dat)]
 
       ## Data: Format for time based object
-      if(is.timeBased(dat$idx)){
-        x.labs = dat$idx[x.breaks]
+      if(is.timeBased(dat$idx)&!is.null(x.labels)){
+        x.labels = dat$idx[x.breaks]
         x.format = ifelse(show.day,"%d %b %Y","%b %Y")
-        x.labs = as.character(format(x.labs, x.format))
+        x.labels = as.character(format(x.labels, x.format))
       }
 
       x.attributes$breaks = x.breaks
-      x.attributes$labs = x.labs
+      x.attributes$labs = x.labels
       x.attributes$show.day = NULL
 
-    } else if (ifelse(!is.null(x.breaks)&is.null(x.labs),is.numeric(x.breaks)|is.timeBased(x.breaks),F)) {
+      ## Condition 2: Checks out x.breaks and x.labels.
+    } else {
 
       if(is.timeBased(x.breaks)){
-        x.labs = x.breaks
-        x.breaks = as.numeric(which(dat$idx%in%x.breaks))
-      } else if (is.numeric(x.breaks)) {
-        x.labs = as.character(dat$idx)[x.breaks]
-      }
 
-      ## Data: Format for time based object
-      if(is.timeBased(dat$idx)){
-        x.format = ifelse(show.day,"%d %b %Y","%b %Y")
-        x.labs = as.character(format(x.labs, x.format))
-      }
+        if(is.null(x.labels)){
+          x.labels = x.breaks
+          x.format = ifelse(show.day,"%d %b %Y","%b %Y")
+          x.labels = as.character(format(x.labels, x.format))
+        }
+        x.breaks = as.numeric(which(dat$idx%in%as.Date(x.breaks)))
 
-      x.attributes$breaks = x.breaks
-      x.attributes$labs = x.labs
-      x.attributes$show.day = NULL
+      } else {
+        x.labels = as.character(dat$idx)[x.breaks]
+      }
 
     }
+
+    x.attributes$breaks = x.breaks
+    x.attributes$labs = x.labels
+    x.attributes$show.day = NULL
 
     ## Auto tilt x-axis labels when there's more than four breaks.
     if(length(x.breaks)>4) x.attributes$labs.tilt = T
@@ -347,7 +346,7 @@ ram.plot = function(
       y.labs = scaler$labs
       dmat[] = coredata(scaler$dat)
 
-      ## Argument: y.attributes$trans.percent. Dat in [0,1]
+      ## Argument: y.attributes$trans.percent
     } else if (y.attributes$trans.percent) {
 
       y.breaks = c(0,0.25,0.5,0.75,1)
