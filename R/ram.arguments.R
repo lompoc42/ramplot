@@ -1,6 +1,6 @@
 #' @title ReSolve Argument Check
 #'
-#' @description This is the arguments module for the plotting functions. The user passes on arguments under the 'umbrella' type which are then passed to the base plot function being called. This function also serves to guard against invalid argument parameters with a few basic use cases.
+#' @description This is the arguments module for the plotting functions. The user passes on arguments under the 'umbrella' type which are then passed to the base plot function being called. This function also serves to guard against invalid argument parameters with a few basic user cases.
 #'
 #' @usage ram.arguments('type', ...)
 #'
@@ -61,9 +61,9 @@
 #'}
 #'
 #' @return NULL
+#' @export
 #'
 #'
-
 ram.arguments = function(type='base',user.args){
 
   names(user.args) = c('x.attributes','y.attributes','titles','emphasis')

@@ -7,6 +7,7 @@ Maintainer: Carl Ayala <lompoc42@yahoo.com>
 Description: Financial plotting functions for ReSolve Asset Management
 License: GPL-3
 LazyData: true
+Encoding: UTF-8
 Depends:
   ggplot2 (>= 3.0.0),
   scales (>= 0.5.0),
