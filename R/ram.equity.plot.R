@@ -120,8 +120,7 @@ ram.equity.plot = function(
 
   ## Plot: Titles
   ## Argument: legend.rows
-  legend.rows = titles$legend.rows
-  lr = ifelse(is.null(legend.rows),1,legend.rows)
+  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
 
 
   ## Argument: titles()
@@ -148,6 +147,10 @@ ram.equity.plot = function(
       plot.title = element_text(size=12, hjust=0.5),
       plot.subtitle = element_text(size=10, hjust=0.5,vjust=-1)
     )
+  }
+
+  if(lr>1){
+    p = p + guides(colour = guide_legend(nrow = lr))
   }
 
 
