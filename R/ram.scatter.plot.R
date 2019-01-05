@@ -15,13 +15,15 @@ ram.scatter.plot = function(
   x.attributes = list(
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
     breaks = NULL,
     labs = NULL,
-    show.values = F
+    show.values = F,
+    text.labs = 12
   ),
 
   titles = list(
@@ -58,7 +60,10 @@ ram.scatter.plot = function(
 
   ## Plot: Base build
   p = ggplot(dat, aes(x=dat[,primary.column])) +
-    ram.theme() +
+    ram.theme(
+      text.xaxis = x.attributes$text.labs,
+      text.yaxis = y.attributes$text.labs
+    ) +
     geom_point(
       aes(y=comp, color=names(dat)[secondary.column]),
       size = 0.25
@@ -163,33 +168,6 @@ ram.scatter.plot = function(
     )
   }
 
-
-  # Emphasis --------------------------------------------------------------
-
-
-  #### EMPHASIS NOT SUPPORTED IN THIS FUNCTION
-  # ## Plot: Line and color emphasis for input
-  # if(!is.null(emphasis$emph.column)){
-  #
-  #   ## Argument: emphasis()
-  #
-  #   # emph.column
-  #   if(is.numeric(emphasis$emph.column)){
-  #     ew = as.numeric(emphasis$emph.column)
-  #   } else {
-  #     ew = which(colnames(dat)%in%as.character(emphasis$emph.column))
-  #   }
-  #
-  #   # emph.color
-  #   ec = ifelse(is.null(emphasis$emph.color),cols[ew],emphasis$emph.color)
-  #
-  #   # Data: modify colors and line sizes according to input
-  #   cols[ew] = ec
-  #   line.sizes[ew] = 0.9
-  #
-  # }
-
-
   ## Plot: hline attributes
   # Argument: emphasis()
   if(!is.null(emphasis$hline)){ # hline
@@ -218,12 +196,11 @@ ram.scatter.plot = function(
   }
 
   ## Plot: Add colors
-  print(
-    p +
-      theme(legend.position = 'top', legend.title = element_blank()) +
-      leg
-  )
+  p = p +
+    theme(legend.position='top',
+          legend.title = element_blank()) +
+    leg
 
-  GeomPath$draw_key = draw_key_path
+  return(p)
 
 }

@@ -66,21 +66,24 @@
 #'
 ram.arguments = function(type='base',user.args){
 
-  names(user.args) = c('x.attributes','y.attributes','titles','emphasis')
 
   if(type=='base'){
+
+    names(user.args) = c('x.attributes','y.attributes','titles','emphasis')
 
     arg.list = arg.out = list(
       x.attributes = list(
         breaks = NULL,
         labs = NULL,
-        labs.tilt = F
+        labs.tilt = F,
+        text.labs = 12
       ),
 
       y.attributes = list(
         breaks = NULL,
         labs = NULL,
-        show.values = F
+        show.values = F,
+        text.labs = 12
       ),
 
       titles = list(
@@ -116,12 +119,15 @@ ram.arguments = function(type='base',user.args){
 
   } else if (type=='umbrella') {
 
+    names(user.args) = c('x.attributes','y.attributes','titles','emphasis','output')
+
     arg.list = arg.out = list(
       x.attributes = list(
         show.day = F,
         breaks = NULL,
         labs = NULL,
-        labs.tilt = F
+        labs.tilt = F,
+        text.labs = 12
       ),
 
       y.attributes = list(
@@ -131,7 +137,8 @@ ram.arguments = function(type='base',user.args){
         trans.log = T,
         trans.percent = F,
         show.values = F,
-        currency = '$'
+        currency = '$',
+        text.labs = 12
       ),
 
       titles = list(
@@ -156,6 +163,13 @@ ram.arguments = function(type='base',user.args){
         waterfall = F,
         ring = F,
         density = F
+      ),
+
+      output = list(
+        file.name = NULL,
+        file.type = 'pdf',
+        width = 10,
+        height = 5
       )
     )
 

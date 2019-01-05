@@ -3,7 +3,12 @@
 #' @description Returns a ReSolve branded theme for ggplot2 objects.
 #' @return NULL
 #'
-ram.theme = function(){
+ram.theme = function(
+  text.xaxis=12,
+  text.yaxis=12
+){
+
+  showtext_auto()
   theme(
 
     # Basic white background
@@ -14,8 +19,9 @@ ram.theme = function(){
     legend.key = element_rect(fill = 'white'),
 
     # Text specs
-    text = element_text(family='Helvetica'),
-    axis.text = element_text(size = 12),
+    text = element_text(family='Helvetica Neue'),
+    axis.text.x = element_text(size = text.xaxis),
+    axis.text.y = element_text(size = text.yaxis),
     legend.text = element_text(size = 10),
 
     # Axis specs
@@ -25,7 +31,7 @@ ram.theme = function(){
       lineend = 'round'),
 
     # Tick specs
-    axis.ticks = element_blank(),     # Clears defaults
+    axis.ticks = element_blank(),   # Clears defaults
     axis.ticks.y = element_line(
       color = 'white',  # ReSolve specific color
       size = 1.5,

@@ -22,13 +22,15 @@ ram.correlation.plot = function(
   x.attributes = list(
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
     breaks = NULL,
     labs = NULL,
-    show.values = F
+    show.values = F,
+    text.labs = 12
   ),
 
   titles = list(
@@ -72,7 +74,10 @@ ram.correlation.plot = function(
         low = cols[1], high = cols[2], mid =  cols[3],
         midpoint = 0, limit = c(-1,1), name="Pearson\nCorrelation") +
       coord_fixed() +
-      ram.theme() +
+      ram.theme(
+        text.xaxis = x.attributes$text.labs,
+        text.yaxis = y.attributes$text.labs
+      ) +
       geom_text(aes(Var2, Var1, label = value),
                 color = "black", size = 4) +
       theme(
@@ -85,7 +90,10 @@ ram.correlation.plot = function(
   } else {
     p = ggplot(dat, aes(value, fill = variable)) +
       geom_density(alpha=(0.5)) +
-      ram.theme()
+      ram.theme(
+        text.xaxis = x.attributes$text.labs,
+        text.yaxis = y.attributes$text.labs
+      )
   }
 
 
@@ -146,6 +154,6 @@ ram.correlation.plot = function(
   }
 
   ## Plot: Print Plot
-  suppressWarnings(print(p))
+  suppressWarnings(return(p))
 
 }

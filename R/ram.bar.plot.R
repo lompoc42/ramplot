@@ -22,13 +22,15 @@ ram.bar.plot = function(
   x.attributes = list(
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
     breaks = NULL,
     labs = NULL,
-    show.values = F
+    show.values = F,
+    text.labs = 12
   ),
 
   titles = list(
@@ -64,7 +66,10 @@ ram.bar.plot = function(
 
   ## Plot: Base build
   p = ggplot(dat, aes(x=1:nrow(dat))) +
-    ram.theme()
+    ram.theme(
+      text.xaxis = x.attributes$text.labs,
+      text.yaxis = y.attributes$text.labs
+    )
 
   ## Argument: emphasis$waterfall
   if(!emphasis$waterfall){
@@ -263,8 +268,7 @@ ram.bar.plot = function(
   ### Legend currently disabled
   # theme(legend.position = 'top', legend.title = element_blank()) +
 
-  print(
-    p + leg
-  )
+  p = p + leg
+  return(p)
 
 }

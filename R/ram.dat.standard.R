@@ -115,11 +115,15 @@ ram.dat.standard = function(dat){
       ## Data is already formatted. Move right along, please.
       out = xts.try
     }
-    return(out)
 
   } else {
 
     ### Data is not in an acceptable format. Good day, sir.
     stop('Data must be a vector, matrix, or data frame.', call. = FALSE, domain = NA)
   }
+
+  cn = names(dat)
+  out = out[,cn[cn%in%names(out)]]
+  return(out)
+
 }

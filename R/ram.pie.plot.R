@@ -22,13 +22,15 @@ ram.pie.plot = function(
   x.attributes = list(
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
     breaks = NULL,
     labs = NULL,
-    show.values = F
+    show.values = F,
+    text.labs = 12
   ),
 
   titles = list(
@@ -123,7 +125,7 @@ ram.pie.plot = function(
     scale_color_manual(values = rep('white',length(cols)))
 
   ### Legend currently disabled
-  print(p)
+  return(p)
 
 
 }

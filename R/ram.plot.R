@@ -41,7 +41,8 @@ ram.plot = function(
     show.day = F,
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
@@ -51,7 +52,8 @@ ram.plot = function(
     trans.log = T,
     trans.percent = F,
     show.values = F,
-    currency = '$'
+    currency = '$',
+    text.labs = 12
   ),
 
   titles = list(
@@ -75,6 +77,13 @@ ram.plot = function(
     show.best.fit = T,
     waterfall = F,
     ring=F
+  ),
+
+  output = list(
+    file.name = NULL,
+    file.type = 'pdf',
+    width = 10,
+    height = 5
   )
 
 ){
@@ -83,24 +92,36 @@ ram.plot = function(
   # Internal Functions ------------------------------------------------------
 
 
-  ram.scaler = function(dat,sval=100){
+  ram.scaler = function(dat,sval=100,ln=T){
 
     b1 = scale.one(dat)
-
     if(is.na(sval)) sval = 1
 
     b2 = as.numeric(na.omit(as.numeric(b1)))
     comp = b2*sval
-    b3 = as.numeric(pretty(log2(b2)))
-    b4 = 2^(b3)*sval
-    b4 = b4[b4>min(comp)&b4<=max(comp)]
 
-    breaks = log2(b4)
-    labs = as.numeric(round(b4))
+    if(ln){
+      b3 = as.numeric(pretty(log2(b2)))
+      b4 = 2^(b3)*sval
+      b4 = b4[b4>min(comp)&b4<=max(comp)]
+
+      breaks = log2(b4)
+      labs = as.numeric(round(b4))
 
 
-    if(!is.na(sval)) b1 = sval * b1
-    b1 = log2(b1)
+      if(!is.na(sval)) b1 = sval * b1
+      b1 = log2(b1)
+    } else {
+      b3 = as.numeric(pretty(b2))
+      b4 = b3*sval
+      b4 = b4[b4>min(comp)&b4<=max(comp)]
+      if(!sval%in%b4) b4 = sort(c(sval,b4))
+
+      breaks = b4
+      labs = as.numeric(round(b4))
+
+      if(!is.na(sval)) b1 = sval * b1
+    }
 
     return(list(dat=b1,breaks=breaks,labs=labs))
 
@@ -111,11 +132,12 @@ ram.plot = function(
 
 
   dat.raw = dat
-  args.final = ram.arguments(type = 'umbrella',user.args = list(x.attributes,y.attributes,titles,emphasis))
+  args.final = ram.arguments(type = 'umbrella',user.args = list(x.attributes,y.attributes,titles,emphasis,output))
   x.attributes = args.final$x.attributes
   y.attributes = args.final$y.attributes
   titles = args.final$titles
   emphasis = args.final$emphasis
+  output = args.final$output
 
 
   # Data --------------------------------------------------------------------
@@ -238,33 +260,42 @@ ram.plot = function(
 
   ## Argument: x.attributes
   show.day = x.attributes$show.day
-  x.breaks = x.attributes$breaks
-  x.labels = x.attributes$labs
-  if(length(x.labels)!=length(x.breaks)) x.labels = NULL
-  if(!is.null(x.labels)) x.labels = as.character(x.labels)
 
+  x.breaks = x.attributes$breaks
+  if(!is.numeric(x.breaks)&!is.timeBased(x.breaks)) x.breaks = NULL
+
+  x.labels = x.attributes$labs
+  if(!is.null(x.labels)){
+    n = length(x.labels)
+    if(n==length(x.breaks)|n==nrow(dat.raw)){
+      x.labels = as.character(x.labels)
+    } else {
+      x.labels = NULL
+    }
+  }
+
+  ## Data: Determine plot type and format accordingly
   if(plot.type%in%c('equity','scatter','transition')){
 
-    if(ifelse(is.null(x.breaks),T,ifelse(!is.numeric(x.breaks)&!is.timeBased(x.breaks),T,F))&is.null(x.labels)){
+
+    ## Condition 1: No valid breaks or labels
+    if(is.null(x.breaks)&is.null(x.labels)){
 
       ## Argument: x.attributes$breaks
       x.breaks = pretty(1:nrow(dat))
       x.breaks = x.breaks[x.breaks>0&x.breaks<nrow(dat)]
 
       ## Data: Format for time based object
-      if(is.timeBased(dat$idx)&!is.null(x.labels)){
+      if(is.timeBased(dat$idx)){
         x.labels = dat$idx[x.breaks]
         x.format = ifelse(show.day,"%d %b %Y","%b %Y")
         x.labels = as.character(format(x.labels, x.format))
       }
 
-      x.attributes$breaks = x.breaks
-      x.attributes$labs = x.labels
-      x.attributes$show.day = NULL
+      ## Condition 2: Custom breaks
+    } else if (!is.null(x.breaks)) {
 
-      ## Condition 2: Checks out x.breaks and x.labels.
-    } else {
-
+      ## Argument: x
       if(is.timeBased(x.breaks)){
 
         if(is.null(x.labels)){
@@ -284,17 +315,17 @@ ram.plot = function(
     x.attributes$labs = x.labels
     x.attributes$show.day = NULL
 
+
     ## Auto tilt x-axis labels when there's more than four breaks.
     if(length(x.breaks)>4) x.attributes$labs.tilt = T
 
-  } else if (plot.type%in%c('bar','waterfall')){
+  } else if (plot.type%in%c('bar','waterfall')) {
 
     ## This section deals with use-case of a data-frame input.
     if(!is.data.frame(dat.raw)){
 
       ## Argument: x.attributes()
       x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
-      x.labels = x.attributes$labs # labs
 
       if(is.null(x.labels)){
         if(plot.type=='bar'){
@@ -336,12 +367,12 @@ ram.plot = function(
     dmat = dat[,-which(names(dat)%in%'idx')]
 
     ## Argument: y.attributes$trans.log
-    if(y.attributes$trans.log&!y.attributes$trans.percent){
+    if(!y.attributes$trans.percent){
 
       start.val = y.attributes$start.val
       if(is.null(start.val)) start.val = NA
 
-      scaler = ram.scaler(dat.raw,start.val)
+      scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
       y.breaks = scaler$breaks
       y.labs = scaler$labs
       dmat[] = coredata(scaler$dat)
@@ -425,7 +456,6 @@ ram.plot = function(
   }
 
 
-
   # Final Arguments ---------------------------------------------------------
 
 
@@ -437,6 +467,36 @@ ram.plot = function(
 
   ## Final Plot Call
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
-  plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
+  out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
+
+
+  # Output ------------------------------------------------------------------
+
+
+  ## Checks to see if there's a filename specified
+  if(!is.null(output$file.name)){
+
+    ## Makes sure filename is correct
+    filename = as.character(output$file.name)
+    fn = strsplit(output$file.name,'')[[1]]
+    wh = which(fn=='.')
+    if(length(wh)==0) filename = paste0(filename,'.pdf')
+
+    ggsave(
+      filename = filename,
+      width = as.numeric(output$width),
+      height = as.numeric(output$height),
+      dpi = 300,
+      plot = out,
+      units = 'in'
+    )
+
+  }
+
+  print(out)
+
+  if(plot.type%in%c('scatter')){
+    GeomPath$draw_key = draw_key_path
+  }
 
 }

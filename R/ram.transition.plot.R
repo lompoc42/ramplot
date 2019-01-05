@@ -14,13 +14,15 @@ ram.transition.plot = function(
   x.attributes = list(
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
     breaks = NULL,
     labs = NULL,
-    show.values = F
+    show.values = F,
+    text.labs = 12
   ),
 
   titles = list(
@@ -68,7 +70,10 @@ ram.transition.plot = function(
   ## Plot: Build base plot
   p = ggplot(dat, aes(x=idx,y=value,fill=variable)) +
     geom_area(position = 'stack') +
-    ram.theme()
+    ram.theme(
+      text.xaxis = x.attributes$text.labs,
+      text.yaxis = y.attributes$text.labs
+    )
 
   # X and Y axis ------------------------------------------------------------
 
@@ -166,9 +171,10 @@ ram.transition.plot = function(
   }
 
   ## Plot: Print Plot
-  suppressWarnings(print(
-    p +
-      theme(legend.position = 'top', legend.title = element_blank()) +
-      leg
-  ))
+  p = p + theme(legend.position='top',
+                legend.title = element_blank()) +
+    leg
+
+  return(p)
+
 }

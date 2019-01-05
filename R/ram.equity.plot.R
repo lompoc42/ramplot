@@ -46,7 +46,7 @@ ram.equity.plot = function(
 
 
 
-  # Colors, Line Sizes, and Legend Titles -----------------------------------
+  # Colors, Line Sizes, Legend Titles, Empghasis ----------------------------
 
   ## Plot: Colors and line sizes
   cols = ram.colors(ncol(dat)-1)
@@ -65,26 +65,41 @@ ram.equity.plot = function(
   }
 
 
+  # Column Emphasis ---------------------------------------------------------
+
+
+  ## Plot: Line and color emphasis for input
+  if(!is.null(emphasis$emph.column)){
+
+    ## Argument: emphasis()
+
+    # emph.column
+    if(is.numeric(emphasis$emph.column)){
+      ew = as.numeric(emphasis$emph.column)
+    } else {
+      ew = which(colnames(dat)%in%as.character(emphasis$emph.column))
+    }
+
+    # emph.color
+    ec = cols[ew]
+
+    # Data: modify colors and line sizes according to input
+    cols[c(ew,1)] = cols[c(1,ew)]
+    line.sizes[ew] = 1.5
+
+  }
+
 
   # Begin Plot --------------------------------------------------------------
 
 
+  datplot = ram.preplot(dat[,-ncol(dat)],'melt')
+  n = nrow(datplot)/length(unique(datplot$variable))
 
   ## Plot: Base build
-  p = ggplot(dat, aes(x = 1:nrow(dat))) +
-    ram.theme()
-
-  for(i in 1:(ncol(dat)-1)){
-    p = p +
-      geom_line(
-        aes_q(
-          y=as.name(names(dat)[i]),
-          color=as.character(names(dat)[i])
-        ),
-        size=line.sizes[i]
-      )
-  }
-
+  p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +
+    ram.theme() +
+    geom_line(size=rep(line.sizes,each=n))
 
 
   # X and Y axis ------------------------------------------------------------
@@ -154,9 +169,7 @@ ram.equity.plot = function(
   }
 
 
-
   # Emphasis ----------------------------------------------------------------
-
 
 
   ## Plot: hline attributes
@@ -178,6 +191,7 @@ ram.equity.plot = function(
 
   }
 
+
   ## Plot: Add colors
   if(length(legend.labels)==0){
     leg = scale_color_manual(values=cols)
@@ -186,10 +200,9 @@ ram.equity.plot = function(
   }
 
   ## Plot: Print Plot
-  suppressWarnings(print(
-    p +
-      scale_size_manual(values = line.sizes) +
-      theme(legend.position = 'top', legend.title = element_blank()) +
-      leg
-  ))
+  p = p +
+    theme(legend.position = 'top', legend.title = element_blank()) +
+    leg
+
+  return(p)
 }
