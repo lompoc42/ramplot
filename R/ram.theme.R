@@ -8,7 +8,8 @@ ram.theme = function(
   text.yaxis=12
 ){
 
-  showtext_auto()
+  font_add(family= 'Helvetica Neue', regular = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot"))
+
   theme(
 
     # Basic white background
