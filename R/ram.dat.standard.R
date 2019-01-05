@@ -123,7 +123,14 @@ ram.dat.standard = function(dat){
   }
 
   cn = names(dat)
-  out = out[,cn[cn%in%names(out)],drop=F]
+  if(is.xts(out)){
+    tmp = as.data.frame(out)
+    tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
+    out = as.xts(out)
+  } else {
+    out = out[,cn[cn%in%names(out)],drop=FALSE]
+  }
+
   return(out)
 
 }
