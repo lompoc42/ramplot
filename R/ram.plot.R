@@ -53,7 +53,8 @@ ram.plot = function(
     trans.percent = F,
     show.values = F,
     currency = '$',
-    text.labs = 12
+    text.labs = 12,
+    text.vals = 4
   ),
 
   titles = list(

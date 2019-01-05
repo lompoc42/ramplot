@@ -30,7 +30,8 @@ ram.bar.plot = function(
     breaks = NULL,
     labs = NULL,
     show.values = F,
-    text.labs = 12
+    text.labs = 12,
+    text.vals = 2
   ),
 
   titles = list(
@@ -202,7 +203,6 @@ ram.bar.plot = function(
 
 
   ## Plot: Add titles
-
   if(show.values){
     if(!emphasis$waterfall){
       vals = dat[,1]
@@ -217,7 +217,9 @@ ram.bar.plot = function(
       y=bar.val.locs,
       label=bar.val.labs),
       vjust=ifelse(bar.val.locs>0,-0.5,1.35),
-      position = position_dodge(width = 0.9))
+      position = position_dodge(width = 0.9),
+      size = y.attributes$text.vals
+    )
 
   }
 
