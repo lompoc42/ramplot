@@ -496,8 +496,4 @@ ram.plot = function(
 
   print(out)
 
-  if(plot.type%in%c('scatter')){
-    GeomPath$draw_key = draw_key_path
-  }
-
 }
