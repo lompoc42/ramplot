@@ -12,5 +12,10 @@ ram.equity.plot(dat,...)
 \item{...}{Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}}
 }
 \description{
-Base Plotting Functions: Equity
+Base Plotting Functions: Correlation and Density
+}
+\examples{
+
+ram.equity.plot(dat,...)
+
 }

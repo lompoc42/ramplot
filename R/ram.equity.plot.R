@@ -1,10 +1,14 @@
 #' @title ReSolve Equity Plotting Function
 #'
-#' @description Base Plotting Functions: Equity
+#' @description Base Plotting Functions: Correlation and Density
 #' @usage ram.equity.plot(dat,...)
 #'
 #' @param dat Data is assumed to be a matrix or vector of prices
 #' @param ... Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}
+#'
+#' @examples
+#'
+#' ram.equity.plot(dat,...)
 #'
 #' @return NULL
 #' @export

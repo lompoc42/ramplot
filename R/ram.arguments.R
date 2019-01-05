@@ -58,6 +58,15 @@
 #'   }
 #'  }
 #'
+#'  \item{\emph{output}}{
+#'   \enumerate{
+#'     \item{file.name = NULL}{}
+#'     \item{file.type = 'pdf'}{}
+#'     \item{width = 10}{}
+#'     \item{height = 5}{}
+#'   }
+#'  }
+#'
 #'}
 #'
 #' @return NULL
