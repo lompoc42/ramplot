@@ -123,7 +123,7 @@ ram.dat.standard = function(dat){
   }
 
   cn = names(dat)
-  out = out[,cn[cn%in%names(out)]]
+  out = out[,cn[cn%in%names(out)],drop=F]
   return(out)
 
 }
