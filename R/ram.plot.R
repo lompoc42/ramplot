@@ -330,8 +330,8 @@ ram.plot = function(
 
       if(is.null(x.labels)){
         if(plot.type=='bar'){
-          if(length(unique(year(dat$idx)))==nrow(dat)){
-            x.labels = as.character(year(dat$idx))
+          if(length(unique(data.table::year(dat$idx)))==nrow(dat)){
+            x.labels = as.character(data.table::year(dat$idx))
           } else {
             x.labels = format(dat$idx,'%Y-%b')
           }
