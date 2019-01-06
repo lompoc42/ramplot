@@ -20,6 +20,7 @@
 #' @param plot.type Selection: 'equity','scatter','bar','waterfall','correlation','transition','pie','ring','density'
 #' @param start.date R formatted date input: Example '2000-12-31'
 #' @param end.date R formatted date input: Example '2000-12-31'
+#' @param render Logical and TRUE by default. If FALSE the plot will not appear in R.
 #' @param ... Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}
 #'
 #' @examples
@@ -36,6 +37,7 @@ ram.plot = function(
   plot.type = 'equity',
   start.date = NULL,
   end.date = NULL,
+  render = T,
 
   x.attributes = list(
     show.day = F,
@@ -498,6 +500,10 @@ ram.plot = function(
 
   }
 
-  print(out)
+  if(render){
+    print(out)
+  } else {
+    out = out
+  }
 
 }

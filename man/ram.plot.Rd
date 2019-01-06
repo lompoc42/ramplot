@@ -17,6 +17,8 @@ See examples for argument use cases.
 
 \item{end.date}{R formatted date input: Example '2000-12-31'}
 
+\item{render}{Logical and TRUE by default. If FALSE the plot will not appear in R.}
+
 \item{...}{Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}}
 }
 \description{
