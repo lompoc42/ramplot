@@ -11,8 +11,7 @@ ram.theme = function(
   ## Install the font and make sure it's loaded
   p0 = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot")
   suppressMessages(file.copy(p0, '~/Library/Fonts'))
-  suppressMessages(sysfonts::font_add(family= 'Helvetica Neue', regular = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot")))
-  suppressMessages(extrafont::loadfonts())
+  sysfonts::font_add(family= 'Helvetica Neue', regular = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot"))
 
   theme(
 
