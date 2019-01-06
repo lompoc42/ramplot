@@ -8,9 +8,9 @@ ram.theme = function(
   text.yaxis=12
 ){
 
-  ## Install the font and make sure it's loaded
+  # ## Install the font and make sure it's loaded
   # p0 = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot")
-  # file.copy()
+  # file.copy(system.file("fonts", "HelveticaNeue.ttf", package="RAMplot"),'~/Library/Fonts')
   # sysfonts::font_add(family= 'Helvetica Neue', regular = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot"))
 
 
@@ -24,7 +24,7 @@ ram.theme = function(
     legend.key = element_rect(fill = 'white'),
 
     # Text specs
-    text = element_text(family='HelveticaNeueLT Com 95 Blk'),
+    text = element_text(family='Helvetica Neue'),
     axis.text.x = element_text(size = text.xaxis),
     axis.text.y = element_text(size = text.yaxis),
     legend.text = element_text(size = 10),

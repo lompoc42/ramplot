@@ -469,6 +469,10 @@ ram.plot = function(
   ## Final Plot Call
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
   out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
+  out = out +
+    theme(
+      text = element_text(family='Helvetica Neue')
+    )
 
 
   # Output ------------------------------------------------------------------
