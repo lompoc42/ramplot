@@ -102,23 +102,25 @@ ram.transition.plot = function(
                              labels= y.attributes$labs)
 
 
+
   # Titles ----------------------------------------------------------------
 
 
-
   ## Plot: Titles
-  ## Argument: legend.rows
-  legend.rows = titles$legend.rows
-  lr = ifelse(is.null(legend.rows),1,legend.rows)
-
-
   ## Argument: titles()
   main.title = titles$main ## main
   main.sub = titles$subtitle ## subtitle
   main.caption = titles$caption ## caption
   x.title = titles$x ## x title
   y.title = titles$y ## y title
+
+  ## Argument: legend.rows
+  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
   legend.labels = as.character(titles$legend.labels)
+
+  if(length(legend.labels)==0){
+    legend.labels = names(dat)[-which(names(dat)%in%'idx')]
+  }
 
 
   ## Plot: Add titles
@@ -138,10 +140,12 @@ ram.transition.plot = function(
     )
   }
 
+  if(lr>1){
+    p = p + guides(colour = guide_legend(nrow = lr))
+  }
 
 
   # Emphasis ----------------------------------------------------------------
-
 
 
   ## Plot: hline attributes
@@ -163,17 +167,15 @@ ram.transition.plot = function(
 
   }
 
-  ## Plot: Add colors
-  if(length(legend.labels)==0){
-    leg = scale_fill_manual(values=cols)
+  ## Final plot out
+  if(lr==0){
+    p = p +
+      scale_fill_manual(values=cols)
   } else {
-    leg = scale_fill_manual(values=cols, labels = legend.labels)
+    p = p +
+      scale_fill_manual(values=cols, labels = legend.labels) +
+      theme(legend.position = 'top', legend.title = element_blank())
   }
-
-  ## Plot: Print Plot
-  p = p + theme(legend.position='top',
-                legend.title = element_blank()) +
-    leg
 
   return(p)
 

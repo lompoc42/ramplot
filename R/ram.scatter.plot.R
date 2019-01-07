@@ -139,19 +139,23 @@ ram.scatter.plot = function(
   }
 
   ## Plot: Titles
-  ## Argument: titles$legend.rows
-  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
-
   ## Argument: titles()
   main.title = titles$main ## main
   main.sub = titles$subtitle ## subtitle
   main.caption = titles$caption ## caption
   x.title = titles$x ## x title
   y.title = titles$y ## y title
-  legend.titles = as.character(titles$legend)
+
+  ## Argument: legend.rows
+  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
+  legend.labels = as.character(titles$legend.labels)
+
+  if(length(legend.labels)==0){
+    legend.labels = names(dat)[-which(names(dat)%in%'idx')]
+  }
+
 
   ## Plot: Add titles
-
   p = p +
     labs(
       title = as.character(main.title),
@@ -167,6 +171,14 @@ ram.scatter.plot = function(
       plot.subtitle = element_text(size=10, hjust=0.5,vjust=-1)
     )
   }
+
+  if(lr>1){
+    p = p + guides(colour = guide_legend(nrow = lr))
+  }
+
+
+  # Emphasis ----------------------------------------------------------------
+
 
   ## Plot: hline attributes
   # Argument: emphasis()
@@ -189,17 +201,15 @@ ram.scatter.plot = function(
 
   GeomPath$draw_key = draw_key_line
 
-  if(length(legend.titles)==0 | length(legend.titles)>2){
-    leg = scale_color_manual(values=cols)
+  ## Final plot out
+  if(lr==0){
+    p = p +
+      scale_color_manual(values=cols)
   } else {
-    leg = scale_color_manual(values=cols, labels = legend.titles)
+    p = p +
+      scale_color_manual(values=cols, labels = legend.labels) +
+      theme(legend.position = 'top', legend.title = element_blank())
   }
-
-  ## Plot: Add colors
-  p = p +
-    theme(legend.position='top',
-          legend.title = element_blank()) +
-    leg
 
   return(p)
 
