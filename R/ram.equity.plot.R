@@ -141,9 +141,6 @@ ram.equity.plot = function(
 
 
   ## Plot: Titles
-  ## Argument: legend.rows
-  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
-
 
   ## Argument: titles()
   main.title = titles$main ## main
@@ -151,6 +148,9 @@ ram.equity.plot = function(
   main.caption = titles$caption ## caption
   x.title = titles$x ## x title
   y.title = titles$y ## y title
+
+  ## Argument: legend.rows
+  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
   legend.labels = as.character(titles$legend.labels)
 
   if(length(legend.labels)==0){
@@ -202,10 +202,15 @@ ram.equity.plot = function(
 
   }
 
-  ## Plot: Print Plot
-  p = p +
-    theme(legend.position = 'top', legend.title = element_blank()) +
-    scale_color_manual(values=cols, labels = legend.labels)
+  ## Final plot out
+  if(lr==0){
+    p = p +
+      scale_color_manual(values=cols)
+  } else {
+    p = p +
+      scale_color_manual(values=cols, labels = legend.labels) +
+      theme(legend.position = 'top', legend.title = element_blank())
+  }
 
   return(p)
 }

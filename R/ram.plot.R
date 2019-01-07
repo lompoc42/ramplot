@@ -381,14 +381,23 @@ ram.plot = function(
       ## Argument: y.attributes$trans.percent
     } else if (y.attributes$trans.percent) {
 
-      y.breaks = c(0,0.25,0.5,0.75,1)
-      y.labs = paste0(comma(y.breaks* 100), "%")
+      if(all(as.numeric(dmat)>=0&as.numeric(dmat)<=1)){
+        y.breaks = c(0,0.25,0.5,0.75,1)
+        y.labs = paste0(comma(y.breaks* 100), "%")
+      } else {
+        y.breaks = y.labs = pretty(as.numeric(dmat))
+        y.labs = paste0(comma(y.breaks* 100), "%")
+      }
 
     } else {
 
-      dat.range = range(dmat,na.rm = T)
-      y.breaks = seq(dat.range[1],dat.range[2],length.out = 5)
-      y.labs = round(y.breaks)
+      n = as.numeric(dmat)
+      y.breaks = pretty(n)
+
+      ## Use case. If over half the data is below 1 we boost rounding.
+      if((length(n[n<1])/length(n))>0.5){
+        y.labs = y.breaks
+      }
 
     }
 
@@ -467,8 +476,6 @@ ram.plot = function(
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
   out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
   out = out +
-
-    ## Ensure font continuity
     theme(
       text = element_text(family='Helvetica Neue')
     )
