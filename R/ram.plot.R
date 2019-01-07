@@ -369,12 +369,10 @@ ram.plot = function(
 
     dmat = dat[,-which(names(dat)%in%'idx')]
 
-    ## Argument: y.attributes$trans.log
-    if(!y.attributes$trans.percent){
+    ## Argument: y.attributes
+    if(!y.attributes$trans.percent&!is.null(y.attributes$start.val)){
 
       start.val = y.attributes$start.val
-      if(is.null(start.val)) start.val = NA
-
       scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
       y.breaks = scaler$breaks
       y.labs = scaler$labs
@@ -389,10 +387,7 @@ ram.plot = function(
     } else {
 
       dat.range = range(dmat,na.rm = T)
-      y.breaks = c(seq(dat.range[1],dat.range[2],length.out = 5),
-                   ifelse(!is.null(y.attributes$start.val),
-                          y.attributes$start.val,
-                          NULL))
+      y.breaks = seq(dat.range[1],dat.range[2],length.out = 5)
       y.labs = round(y.breaks)
 
     }
@@ -472,6 +467,8 @@ ram.plot = function(
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
   out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
   out = out +
+
+    ## Ensure font continuity
     theme(
       text = element_text(family='Helvetica Neue')
     )
