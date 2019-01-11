@@ -87,9 +87,18 @@ ram.bar.plot = function(
       ))
   } else if(emphasis$waterfall){
     ## Waterfall Barchart
-    cols = ram.colors(lookup = c('dark.blue','cian'))
-    cols = as.character(c(rep(cols[2],nrow(dat)-1),cols[1]))
-    cols = cols[order(row.names(dat))]
+    ## Plot: RAM colors
+    if(all(dat$val>=0&dat$val<=1)){
+      cols = ram.colors(lookup = c('dark.blue','cian'))
+      cols = as.character(c(rep(cols[2],nrow(dat)-1),cols[1]))
+      cols = cols[order(row.names(dat))]
+    } else {
+      v = as.numeric(dat$val[-nrow(dat)])
+      cols = ram.colors(lookup = c('cian','dark.orange','dark.blue'))
+      cols = as.character(c(rep(cols[1],length(v[v>0])),rep(cols[2],length(v[v<0])),cols[3]))
+      cols = cols[order(row.names(dat))]
+    }
+
     p = p + geom_rect(
       stat='identity',
       aes(
@@ -125,25 +134,13 @@ ram.bar.plot = function(
   }
 
 
-
   # X and Y axis ------------------------------------------------------------
-
 
 
   ## Argument: x.attributes()
   x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
   x.labels = x.attributes$labs
   tilt = x.attributes$labs.tilt
-
-  if(!emphasis$waterfall){
-    if(any(dat[,1]<0)){
-      y.limits = c(min(-0.05,min(dat[,1])*1.85),max(dat[,1]*1.2))
-    } else {
-      y.limits = c(0,max(dat[,1]*1.2))
-    }
-  } else if (emphasis$waterfall) {
-    y.limits = c(0,max(dat[,1]*1.1))
-  }
 
   ## Plot: add x.attributes
   p = p +
@@ -152,7 +149,7 @@ ram.bar.plot = function(
                        labels = x.labels)
 
   ## Plot: ammend x-axis bar in case of negative bar values
-  if(any(y.attributes$breaks<0)){
+  if(any(y.attributes$breaks<0)&!emphasis$waterfall){
     p = p + theme(
       axis.line.x = element_line(
         color = 'white',
@@ -164,15 +161,24 @@ ram.bar.plot = function(
                  size = 1.5)
   }
 
-
   ## Plot: add y.attributes
-  p = p +
-    scale_y_continuous(
+  if(sum(dat[-nrow(dat),1])==1){
+    y.limits = c(0,max(dat[,1]*1.1))
+    p = p +
+      scale_y_continuous(
+        breaks = y.attributes$breaks,
+        expand = c(0,0),
+        limits = y.limits,
+        labels = y.attributes$labs
+      )
+  } else if (!emphasis$waterfall) {
+    p = p +  scale_y_continuous(
       breaks = y.attributes$breaks,
-      expand = c(0,0),
-      limits = y.limits,
       labels = y.attributes$labs
     )
+  } else {
+    p = p + scale_y_continuous(labels = percent)
+  }
 
   ## Argument: update theme x.attributes$labs.tilt
   if(tilt){
@@ -204,23 +210,23 @@ ram.bar.plot = function(
 
   ## Plot: Add titles
   if(show.values){
-    if(!emphasis$waterfall){
-      vals = dat[,1]
-      bar.val.locs = vals
-      bar.val.labs = paste0(round(dat[,1]*100,titles$rounding),'%')
-    } else if (emphasis$waterfall){
+
+    ## Sum to 1 portfolio use case
+    if(emphasis$waterfall){
       bar.val.locs = dat$end
       bar.val.labs = paste0(round(dat$val*100,titles$rounding),'%')
+    } else {
+      bar.val.locs = dat[,1]
+      bar.val.labs = paste0(round(dat[,1]*100,titles$rounding),'%')
     }
 
     p = p + geom_text(aes(
       y=bar.val.locs,
       label=bar.val.labs),
-      vjust=ifelse(bar.val.locs>0,-0.5,1.35),
+      vjust=ifelse(dat[,1]>0,-0.5,1.35),
       position = position_dodge(width = 0.9),
       size = y.attributes$text.vals
     )
-
   }
 
   p = p +

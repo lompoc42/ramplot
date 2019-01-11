@@ -59,6 +59,7 @@ ram.preplot = function(dat, type='standard'){
     dat$ids = row.names(dat) = c(cn,'Portfolio')
     out = dat
 
+
   } else if (type=='correlation') {
 
     ## Plot: Base build

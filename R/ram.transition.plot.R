@@ -119,7 +119,7 @@ ram.transition.plot = function(
   legend.labels = as.character(titles$legend.labels)
 
   if(length(legend.labels)==0){
-    legend.labels = names(dat)[-which(names(dat)%in%'idx')]
+    legend.labels = as.character(unique(dat$variable))
   }
 
 

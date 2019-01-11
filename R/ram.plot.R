@@ -318,10 +318,6 @@ ram.plot = function(
     x.attributes$labs = x.labels
     x.attributes$show.day = NULL
 
-
-    ## Auto tilt x-axis labels when there's more than four breaks.
-    if(length(x.breaks)>4) x.attributes$labs.tilt = T
-
   } else if (plot.type%in%c('bar','waterfall')) {
 
     ## This section deals with use-case of a data-frame input.
@@ -357,6 +353,9 @@ ram.plot = function(
     x.attributes$labs = x.labels
 
   }
+
+  ## Auto tilt x-axis labels when there's more than four breaks.
+  if(length(x.breaks)>4) x.attributes$labs.tilt = T
 
 
   # Y Axis Attributes -----------------------------------------------------
@@ -431,8 +430,16 @@ ram.plot = function(
       y.breaks = as.numeric(pretty(sort(round(dat[,1],4))))
       y.labs = paste0(comma(y.breaks* 100), "%")
     } else if (plot.type%in%c('waterfall','transition')){
-      y.breaks = c(0,0.25,0.5,0.75,1)
-      y.labs = paste0(comma(y.breaks* 100), "%")
+
+      ## Waterfall use cases
+      if(dat[nrow(dat),1]==1|plot.type=='transition'){
+        y.breaks = c(0,0.25,0.5,0.75,1)
+        y.labs = paste0(comma(y.breaks* 100), "%")
+      } else {
+        y.breaks = as.numeric(pretty(sort(round(dat$end,4))))
+        y.labs = paste0(comma(y.breaks* 100), "%")
+      }
+
     }
 
     y.attributes$breaks = y.breaks
