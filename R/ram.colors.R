@@ -45,6 +45,7 @@
 #'
 ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
 
+
   expand.cols = function(dm, n){
     matrix(rep(dm, n), ncol = n)
   }
@@ -77,7 +78,8 @@ ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
     grey1 = '#293645',
     black = '#000000',
     grey3 = '#88949e',
-    slate = '#698fa3'
+    slate = '#698fa3',
+    dark.orange = '#9c3000'
 
   )
 
@@ -87,7 +89,7 @@ ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
     ## Argument: intial color
     c1 = ifelse(pcolor%in%ac,pcolor,as.character(ac[pcolor]))
     wh = which(ac%in%c1)
-    b1 = sqrt(rowSums((expand.rows(mat[wh,],19) - mat[-wh,])^2))
+    b1 = sqrt(rowSums((expand.rows(mat[wh,],20) - mat[-wh,])^2))
     c2 = ac[which.max(b1)+1]
     wh = which.min(abs(b1-(b1[which.max(b1)]/2)))
     c3 = ac[wh]
