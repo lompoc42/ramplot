@@ -42,23 +42,26 @@ ram.preplot = function(dat, type='standard'){
     if(all(dim(dat)!=1)&!is.vector(dat)){
       stop('Formatting error. Expecting a comparison vector.',
            call. = FALSE, domain = NA)
-    } else if (ifelse(is.null(dim(dat)[1]),F,dim(dat)[1]==1)) {
-      dat = as.data.frame(t(dat))
-      cn = rownames(dat)
-    } else if (is.vector(dat)) {
-      dat = round(as.data.frame(t(t(dat))),4)
+    } else {
+
+      if(ifelse(is.null(dim(dat)[1]),F,dim(dat)[1]==1)){
+        dat = as.data.frame(t(dat))
+      } else {
+        dat = round(as.data.frame(t(t(dat))),4)
+      }
       cn = rownames(dat)
     }
 
     names(dat)='val'
-    dat[] = dat[order(dat[,1],decreasing = T),]
+    wh = order(dat[,1],decreasing = T)
+    dat[] = dat[wh,]
     dat$end = cumsum(dat$val)
+
     dat$begin = as.numeric(ifna(mlag(dat$end),0))
     dat = rbind(dat,c(sum(dat$val),sum(dat$val),0))
     dat$idx = 1:nrow(dat)
-    dat$ids = row.names(dat) = c(cn,'Portfolio')
+    dat$ids = row.names(dat) = c(cn[wh],'Portfolio')
     out = dat
-
 
   } else if (type=='correlation') {
 
