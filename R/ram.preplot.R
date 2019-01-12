@@ -65,7 +65,7 @@ ram.preplot = function(dat, type='standard'){
 
   } else if (type=='correlation') {
 
-    ## Plot: Base build
+    ## Plot: Base build plot
     cormat = upper.tri(dat,diag = T)
     cormat[!cormat] = NA
     cormat = cormat * dat
