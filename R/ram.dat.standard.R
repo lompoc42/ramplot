@@ -74,7 +74,14 @@ ram.dat.standard = function(dat){
     if(!is.null(idx)){
       out = xts(as.numeric(dat),idx)
     } else {
-      out = as.data.frame(as.numeric(dat))
+      cn = names(dat)
+      if(length(unique(names(dat)))==length(dat)){
+        out = as.data.frame(t(as.numeric(dat)))
+        names(out) = names(dat)
+      } else {
+        out = as.data.frame(as.numeric(dat))
+        names(out) = 'values'
+      }
     }
 
     ### Data is not a vector. Is it a matrix or dataframe?

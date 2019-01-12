@@ -344,8 +344,13 @@ ram.plot = function(
     } else {
 
       ## Argument: x.attributes()
-      x.labels = as.character(rownames(dat.raw)) # labs
-      x.breaks = dat$idx # Manual x.breaks not supported in barplot
+      if(plot.type=='bar'){
+        x.labels = as.character(rownames(dat.raw)) # labs
+        x.breaks = dat$idx # Manual x.breaks not supported in barplot
+      } else {
+        x.labels = as.character(dat$ids) # labs
+        x.breaks = dat$idx # Manual x.breaks not supported in barplot
+      }
 
     }
 
