@@ -61,10 +61,6 @@ ram.bar.plot = function(
 
   # Plot Setup --------------------------------------------------------------
 
-
-  ## Plot: RAM colors
-  cols = ram.colors(ncol(dat)-1)
-
   ## Plot: Base build
   p = ggplot(dat, aes(x=1:nrow(dat))) +
     ram.theme(
@@ -85,17 +81,17 @@ ram.bar.plot = function(
         ymax=ifelse(dat[,1]<0,0,dat[,1]),
         fill=as.character(idx)
       ))
-  } else if(emphasis$waterfall){
+  } else if(emphasis$waterfall) {
     ## Waterfall Barchart
     ## Plot: RAM colors
-    if(all(dat$val>=0&dat$val<=1)){
+    if(sum(dat[-nrow(dat),1])==1){
       cols = ram.colors(lookup = c('dark.blue','cian'))
       cols = as.character(c(rep(cols[2],nrow(dat)-1),cols[1]))
       cols = cols[order(row.names(dat))]
     } else {
       v = as.numeric(dat$val[-nrow(dat)])
       cols = ram.colors(lookup = c('cian','dark.orange','dark.blue'))
-      cols = as.character(c(rep(cols[1],length(v[v>0])),rep(cols[2],length(v[v<0])),cols[3]))
+      cols = as.character(c(rep(cols[1],length(v[v>=0])),rep(cols[2],length(v[v<0])),cols[3]))
       cols = cols[order(row.names(dat))]
     }
 
