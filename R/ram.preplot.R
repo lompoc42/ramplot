@@ -18,7 +18,7 @@
 #' @return NULL
 #' @export
 #'
-ram.preplot = function(dat, type='standard'){
+ram.preplot = function(dat, type='standard', idx.vector='idx'){
 
   if(type%in%c('standard','melt')){
 
@@ -27,14 +27,16 @@ ram.preplot = function(dat, type='standard'){
     out[] = coredata(dat)
     names(out) = names(dat)
 
-    if(t1){
-      out$idx = as.Date(index(dat))
-    } else {
-      out$idx = 1:nrow(dat)
+    if(idx.vector=='idx'){
+      if(t1){
+        out$idx = as.Date(index(dat))
+      } else {
+        out$idx = 1:nrow(dat)
+      }
     }
 
     if(type=='melt'){
-      out = melt(out,id='idx')
+      out = melt(out,id=idx.vector)
     }
 
   } else if (type=='waterfall') {
@@ -65,7 +67,7 @@ ram.preplot = function(dat, type='standard'){
 
   } else if (type=='correlation') {
 
-    ## Plot: Base build plot
+    ## Plot: Base build
     cormat = upper.tri(dat,diag = T)
     cormat[!cormat] = NA
     cormat = cormat * dat

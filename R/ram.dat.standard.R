@@ -133,7 +133,7 @@ ram.dat.standard = function(dat){
   if(is.xts(out)){
     tmp = as.data.frame(out)
     tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
-    out = as.xts(out)
+    out = xts(tmp,index(out))
   } else {
     out = out[,cn[cn%in%names(out)],drop=FALSE]
   }

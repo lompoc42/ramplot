@@ -61,51 +61,71 @@ ram.bar.plot = function(
 
   # Plot Setup --------------------------------------------------------------
 
-  ## Plot: Base build
-  p = ggplot(dat, aes(x=1:nrow(dat))) +
-    ram.theme(
-      text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs
-    )
 
-  ## Argument: emphasis$waterfall
-  if(!emphasis$waterfall){
-    cols = rep(ram.colors(1),nrow(dat))
-    # Standard bar chart
-    p = p + geom_rect(
-      stat='identity',
-      aes(
-        xmin=(1:nrow(dat))-0.45,
-        xmax=(1:nrow(dat))+0.45,
-        ymin=ifelse(dat[,1]<0,dat[,1],0),
-        ymax=ifelse(dat[,1]<0,0,dat[,1]),
-        fill=as.character(idx)
-      ))
-  } else if(emphasis$waterfall) {
-    ## Waterfall Barchart
-    ## Plot: RAM colors
-    if(sum(dat[-nrow(dat),1])==1){
-      cols = ram.colors(lookup = c('dark.blue','cian'))
-      cols = as.character(c(rep(cols[2],nrow(dat)-1),cols[1]))
-      cols = cols[order(row.names(dat))]
-    } else {
-      v = as.numeric(dat$val[-nrow(dat)])
-      cols = ram.colors(lookup = c('cian','dark.orange','dark.blue'))
-      cols = as.character(c(rep(cols[1],length(v[v>=0])),rep(cols[2],length(v[v<0])),cols[3]))
-      cols = cols[order(row.names(dat))]
+  ## Waterfall plots and single item bar plots
+  if(ncol(dat)==2|emphasis$waterfall){
+    ## Plot: Base build
+    p = ggplot(dat, aes(x=1:nrow(dat))) +
+      ram.theme(
+        text.xaxis = x.attributes$text.labs,
+        text.yaxis = y.attributes$text.labs
+      )
+
+    ## Argument: emphasis$waterfall
+    if(!emphasis$waterfall){
+      cols = rep(ram.colors(1),nrow(dat))
+      # Standard bar chart
+      p = p + geom_rect(
+        stat='identity',
+        aes(
+          xmin=(1:nrow(dat))-0.45,
+          xmax=(1:nrow(dat))+0.45,
+          ymin=ifelse(dat[,1]<0,dat[,1],0),
+          ymax=ifelse(dat[,1]<0,0,dat[,1]),
+          fill=as.character(idx)
+        ))
+    } else if(emphasis$waterfall) {
+      ## Waterfall Barchart
+      ## Plot: RAM colors
+      if(sum(dat[-nrow(dat),1])==1){
+        cols = ram.colors(lookup = c('dark.blue','cian'))
+        cols = as.character(c(rep(cols[2],nrow(dat)-1),cols[1]))
+        cols = cols[order(row.names(dat))]
+      } else {
+        v = as.numeric(dat$val[-nrow(dat)])
+        cols = ram.colors(lookup = c('cian','dark.orange','dark.blue'))
+        cols = as.character(c(rep(cols[1],length(v[v>=0])),rep(cols[2],length(v[v<0])),cols[3]))
+        cols = cols[order(row.names(dat))]
+      }
+
+      p = p + geom_rect(
+        stat='identity',
+        aes(
+          xmin=idx-0.45,
+          xmax=idx+0.45,
+          ymin=begin,
+          ymax=end,
+          fill=ids
+        ))
     }
+  } else {
 
-    p = p + geom_rect(
-      stat='identity',
-      aes(
-        xmin=idx-0.45,
-        xmax=idx+0.45,
-        ymin=begin,
-        ymax=end,
-        fill=ids
-      ))
+    p = ggplot(dat,
+               aes(x=get(names(dat)[1]),
+                   fill=variable,
+                   y=value,
+                   label=value)) +
+      ram.theme(
+        text.xaxis = x.attributes$text.labs,
+        text.yaxis = y.attributes$text.labs
+      )
+
+    cols = ram.colors(length(unique(dat$variable)))
+    # Standard bar chart
+    p = p + geom_bar(
+      position = 'dodge',
+      stat='identity')
   }
-
 
 
   # Emphasis --------------------------------------------------------------
@@ -113,7 +133,7 @@ ram.bar.plot = function(
 
 
   ## Plot: Line and color emphasis for input
-  if(!is.null(emphasis$emph.column)){
+  if(!is.null(emphasis$emph.column)&(ncol(dat)==2|emphasis$waterfall)){
 
     ## Argument: emphasis()
 
@@ -134,15 +154,22 @@ ram.bar.plot = function(
 
 
   ## Argument: x.attributes()
-  x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
+  if(ncol(dat)==2|emphasis$waterfall){
+    x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
+  } else {
+    x.breaks = x.attributes$breaks
+  }
+
   x.labels = x.attributes$labs
   tilt = x.attributes$labs.tilt
 
   ## Plot: add x.attributes
-  p = p +
-    scale_x_continuous(breaks = x.breaks,
-                       expand = c(0.05,0.025), # Gives margin
-                       labels = x.labels)
+  if(ncol(dat)==2|emphasis$waterfall){
+    p = p +
+      scale_x_continuous(breaks = x.breaks,
+                         expand = c(0.05,0.025), # Gives margin
+                         labels = x.labels)
+  }
 
   ## Plot: ammend x-axis bar in case of negative bar values
   if(any(y.attributes$breaks<0)&!emphasis$waterfall){
@@ -158,22 +185,30 @@ ram.bar.plot = function(
   }
 
   ## Plot: add y.attributes
-  if(sum(dat[-nrow(dat),1])==1){
-    y.limits = c(0,max(dat[,1]*1.1))
-    p = p +
-      scale_y_continuous(
+  if(ncol(dat)==2|emphasis$waterfall){
+    if(sum(dat[-nrow(dat),1])==1){
+      y.limits = c(0,max(dat[,1]*1.1))
+      p = p +
+        scale_y_continuous(
+          breaks = y.attributes$breaks,
+          expand = c(0,0),
+          limits = y.limits,
+          labels = y.attributes$labs
+        )
+    } else if (!emphasis$waterfall) {
+      p = p +  scale_y_continuous(
         breaks = y.attributes$breaks,
-        expand = c(0,0),
-        limits = y.limits,
         labels = y.attributes$labs
       )
-  } else if (!emphasis$waterfall) {
-    p = p +  scale_y_continuous(
-      breaks = y.attributes$breaks,
-      labels = y.attributes$labs
-    )
+    } else {
+      p = p + scale_y_continuous(labels = percent)
+    }
   } else {
-    p = p + scale_y_continuous(labels = percent)
+    p = p +
+      scale_y_continuous(
+        labels = percent,
+        limits = range(dat$value*1.1)
+      )
   }
 
   ## Argument: update theme x.attributes$labs.tilt
@@ -191,8 +226,6 @@ ram.bar.plot = function(
 
 
   ## Plot: Titles
-  ## Argument: legend.rows
-  lr = ifelse(!is.null(titles$legend.rows),titles$legend.rows,0)
 
   ## Argument: titles()
   main.title = titles$main ## main
@@ -200,7 +233,6 @@ ram.bar.plot = function(
   main.caption = titles$caption ## caption
   x.title = titles$x ## x title
   y.title = titles$y ## y title
-  legend.titles = as.character(titles$legend)
   show.values = y.attributes$show.values
 
 
@@ -212,17 +244,32 @@ ram.bar.plot = function(
       bar.val.locs = dat$end
       bar.val.labs = paste0(round(dat$val*100,titles$rounding),'%')
     } else {
-      bar.val.locs = dat[,1]
-      bar.val.labs = paste0(round(dat[,1]*100,titles$rounding),'%')
+      if(ncol(dat)==2){
+        bar.val.locs = dat[,1]
+        bar.val.labs = paste0(round(dat[,1]*100,titles$rounding),'%')
+      } else {
+        bar.val.locs = dat$value
+        bar.val.labs = paste0(round(dat$value*100,titles$rounding),'%')
+      }
     }
 
-    p = p + geom_text(aes(
-      y=bar.val.locs,
-      label=bar.val.labs),
-      vjust=ifelse(dat[,1]>0,-0.5,1.35),
-      position = position_dodge(width = 0.9),
-      size = y.attributes$text.vals
-    )
+    if(ncol(dat)==2|emphasis$waterfall){
+      p = p + geom_text(aes(
+        y=bar.val.locs,
+        label=bar.val.labs),
+        vjust=ifelse(dat[,1]>0,-0.5,1.35),
+        # position = position_dodge(width = 0.9),
+        size = y.attributes$text.vals
+      )
+    } else {
+      p = p +
+        geom_text(
+          data=dat,
+          position=position_dodge(width= .9),
+          aes(y=value, label=bar.val.labs,vjust=ifelse(dat$value>0,-0.5,1.35))
+        )
+
+    }
   }
 
   p = p +
@@ -261,18 +308,28 @@ ram.bar.plot = function(
 
   }
 
-  ## Plot: Add colors
-  if(length(legend.titles)==0 | length(legend.titles)>2){
-    leg = scale_fill_manual(values=cols)
-  } else {
-    leg = scale_fill_manual(values=cols, labels = legend.titles)
+  ## Plot: Add colors and legends
+
+  ## Argument: legend.rows
+  lr = ifelse(!is.null(titles$legend.rows),titles$legend.rows,0)
+  legend.labels = titles$legend.labels
+
+  if(is.null(legend.labels)&lr>0){
+    if(ncol(dat)==2){
+      legend.labels = as.character(names(dat)[!names(dat)%in%'idx'])
+    } else {
+      legend.labels = as.character(unique(dat$variable))
+    }
   }
 
-  ## Plot: Add colors
-  ### Legend currently disabled
-  # theme(legend.position = 'top', legend.title = element_blank()) +
+  ## Plot: Add colors and legend
+  if(length(legend.labels)==0){
+    p = p + scale_fill_manual(values=cols)
+  } else {
+    p = p + scale_fill_manual(values=cols, labels = legend.labels) +
+      theme(legend.position = 'top', legend.title = element_blank())
+  }
 
-  p = p + leg
   return(p)
 
 }

@@ -98,7 +98,10 @@ ram.plot = function(
   ram.scaler = function(dat,sval=100,ln=T){
 
     b1 = scale.one(dat)
-    if(is.na(sval)) sval = 1
+    if(is.null(sval)){
+      sval = 1
+      ln = F
+    }
 
     b2 = as.numeric(na.omit(as.numeric(b1)))
     comp = b2*sval
@@ -229,7 +232,11 @@ ram.plot = function(
 
     ## Data: Preplot trasnforms per plot
     if(plot.type=='bar'){
-      dat = ram.preplot(dat,'standard')
+      if(ncol(dat)>2){
+        dat = suppressWarnings(ram.preplot(dat,'melt',idx.vector = names(dat)[1]))
+      } else {
+        dat = ram.preplot(dat,'standard')
+      }
     } else {
       dat = ram.preplot(dat,'waterfall')
     }
@@ -346,7 +353,7 @@ ram.plot = function(
       ## Argument: x.attributes()
       if(plot.type=='bar'){
         x.labels = as.character(rownames(dat.raw)) # labs
-        x.breaks = dat$idx # Manual x.breaks not supported in barplot
+        x.breaks = 1:nrow(dat.raw) # Manual x.breaks not supported in barplot
       } else {
         x.labels = as.character(dat$ids) # labs
         x.breaks = dat$idx # Manual x.breaks not supported in barplot
@@ -374,7 +381,7 @@ ram.plot = function(
     dmat = dat[,-which(names(dat)%in%'idx')]
 
     ## Argument: y.attributes
-    if(!y.attributes$trans.percent&!is.null(y.attributes$start.val)){
+    if(!y.attributes$trans.percent){
 
       start.val = y.attributes$start.val
       scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
@@ -389,14 +396,14 @@ ram.plot = function(
         y.breaks = c(0,0.25,0.5,0.75,1)
         y.labs = paste0(comma(y.breaks* 100), "%")
       } else {
-        y.breaks = y.labs = pretty(as.numeric(dmat))
+        y.breaks = y.labs = pretty(as.numeric(as.matrix(dmat)))
         y.labs = paste0(comma(y.breaks* 100), "%")
       }
 
     } else {
 
-      n = as.numeric(dmat)
-      y.breaks = pretty(n)
+      n = as.numeric(as.matrix(dmat))
+      y.breaks = y.labs = pretty(as.numeric(as.matrix(dmat)))
 
       ## Use case. If over half the data is below 1 we boost rounding.
       if((length(n[n<1])/length(n))>0.5){
@@ -432,8 +439,14 @@ ram.plot = function(
   } else if (plot.type%in%c('bar','waterfall','transition')){
 
     if(plot.type=='bar'){
-      y.breaks = as.numeric(pretty(sort(round(dat[,1],4))))
-      y.labs = paste0(comma(y.breaks* 100), "%")
+      if(ncol(dat)>2){
+        y.breaks = as.numeric(pretty(sort(round(dat$value,4))))
+        y.labs = paste0(comma(y.breaks* 100), "%")
+      } else {
+        y.breaks = as.numeric(pretty(sort(round(dat[,1],4))))
+        y.labs = paste0(comma(y.breaks* 100), "%")
+      }
+
     } else if (plot.type%in%c('waterfall','transition')){
 
       ## Waterfall use cases
