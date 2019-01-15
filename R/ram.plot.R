@@ -388,7 +388,7 @@ ram.plot = function(
     dmat = dat[,-which(names(dat)%in%'idx')]
 
     ## Argument: y.attributes
-    if(!y.attributes$trans.percent){
+    if(!y.attributes$trans.percent&all(as.numeric(as.matrix(dmat))>0)){
 
       start.val = y.attributes$start.val
       scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
@@ -484,9 +484,7 @@ ram.plot = function(
   }
 
 
-
   # Titles ------------------------------------------------------------------
-
 
 
   ## Argument: titles$legend.labels
