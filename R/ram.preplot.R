@@ -18,7 +18,7 @@
 #' @return NULL
 #' @export
 #'
-ram.preplot = function(dat, type='standard', idx.vector='idx'){
+ram.preplot = function(dat, type='standard'){
 
   if(type%in%c('standard','melt')){
 
@@ -27,16 +27,14 @@ ram.preplot = function(dat, type='standard', idx.vector='idx'){
     out[] = coredata(dat)
     names(out) = names(dat)
 
-    if(idx.vector=='idx'){
-      if(t1){
-        out$idx = as.Date(index(dat))
-      } else {
-        out$idx = 1:nrow(dat)
-      }
+    if(t1){
+      out$idx = as.Date(index(dat))
+    } else {
+      out$idx = 1:nrow(dat)
     }
 
     if(type=='melt'){
-      out = melt(out,id=idx.vector)
+      out = melt(out,id='idx')
     }
 
   } else if (type=='waterfall') {
@@ -90,7 +88,53 @@ ram.preplot = function(dat, type='standard', idx.vector='idx'){
       mutate(ymax = round(cumsum(weights),2),
              center = ymax - weights / 2,
              ymin = c(0,head(ymax,-1)))
+  } else if (type=='bar2') {
+    ids = as.character(rownames(dat))
+    tmp = as.data.frame(cbind(ids,dat))
+    out = melt(tmp,id.vars = 'ids')
   }
 
   return(out)
+}
+
+ram.theme = function(
+  text.xaxis=12,
+  text.yaxis=12
+){
+
+  # ## Install the font and make sure it's loaded
+  # sysfonts::font_add(family= 'Helvetica Neue', regular = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot"))
+
+  theme(
+
+    # Basic white background
+    plot.title = NULL,
+    panel.background = element_blank(),  # Clears defaults
+    legend.position = "none", # Turns off legend by default
+    legend.title = element_text(size=8),
+    legend.key = element_rect(fill = 'white'),
+
+    # Text specs
+    text = element_text(family='Helvetica Neue'),
+    axis.text.x = element_text(size = text.xaxis),
+    axis.text.y = element_text(size = text.yaxis),
+    legend.text = element_text(size = 10),
+
+    # Axis specs
+    axis.line = element_line(
+      color = '#023858',  # ReSolve specific color
+      size = 1.5,
+      lineend = 'round'),
+
+    # Tick specs
+    axis.ticks = element_blank(),   # Clears defaults
+    axis.ticks.y = element_line(
+      color = 'white',  # ReSolve specific color
+      size = 1.5,
+      linetype = 'solid',
+      lineend = 'square'
+    ),
+    axis.ticks.length = unit(2,'mm')
+
+  )
 }

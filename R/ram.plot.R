@@ -98,6 +98,7 @@ ram.plot = function(
   ram.scaler = function(dat,sval=100,ln=T){
 
     b1 = scale.one(dat)
+
     if(is.null(sval)){
       sval = 1
       ln = F
@@ -232,8 +233,14 @@ ram.plot = function(
 
     ## Data: Preplot trasnforms per plot
     if(plot.type=='bar'){
-      if(ncol(dat)>2){
-        dat = suppressWarnings(ram.preplot(dat,'melt',idx.vector = names(dat)[1]))
+
+      cn = rownames(as.data.frame(dat))
+      c1 = suppressWarnings(inherits(try(as.Date(cn),T),'try-error'))
+      c2 = suppressWarnings(try(as.integer(cn),T))
+      c2 = length(na.omit(c2))==0
+
+      if(c1&c2){
+        dat = ram.preplot(dat,'bar2')
       } else {
         dat = ram.preplot(dat,'standard')
       }
@@ -389,6 +396,11 @@ ram.plot = function(
       y.labs = scaler$labs
       dmat[] = coredata(scaler$dat)
 
+      ## Data: Adjust hline settings for log
+      if(!is.null(emphasis$hline)&y.attributes$trans.log){
+        emphasis$hline = log2(emphasis$hline)
+      }
+
       ## Argument: y.attributes$trans.percent
     } else if (y.attributes$trans.percent) {
 
@@ -439,7 +451,7 @@ ram.plot = function(
   } else if (plot.type%in%c('bar','waterfall','transition')){
 
     if(plot.type=='bar'){
-      if(ncol(dat)>2){
+      if(!'idx'%in%names(dat)){
         y.breaks = as.numeric(pretty(sort(round(dat$value,4))))
         y.labs = paste0(comma(y.breaks* 100), "%")
       } else {
