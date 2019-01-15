@@ -111,7 +111,7 @@ ram.bar.plot = function(
   } else {
 
     p = ggplot(dat,
-               aes(x=get(names(dat)[1]),
+               aes(x=ids,
                    fill=variable,
                    y=value,
                    label=value)) +
@@ -316,7 +316,7 @@ ram.bar.plot = function(
 
   if(is.null(legend.labels)&lr>0){
     if(ncol(dat)==2){
-      legend.labels = as.character(names(dat)[!names(dat)%in%'idx'])
+      legend.labels = as.character(dat$ids)
     } else {
       legend.labels = as.character(unique(dat$variable))
     }
@@ -328,6 +328,11 @@ ram.bar.plot = function(
   } else {
     p = p + scale_fill_manual(values=cols, labels = legend.labels) +
       theme(legend.position = 'top', legend.title = element_blank())
+  }
+
+  ## Plot: Add legend rows
+  if(lr>1){
+    p = p + guides(fill = guide_legend(nrow = lr))
   }
 
   return(p)
