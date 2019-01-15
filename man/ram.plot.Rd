@@ -32,6 +32,7 @@ The umbrella plotting function for the RAMplot package. Data is assumed to be tr
  \item{\emph{:: density}}{}
  \item{\emph{:: pie}}{}
  \item{\emph{:: ring}}{}
+ \item{\emph{:: efmap}}{}
 }
 }
 \examples{

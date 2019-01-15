@@ -10,6 +10,7 @@
 #'  \item{\emph{:: density}}{}
 #'  \item{\emph{:: pie}}{}
 #'  \item{\emph{:: ring}}{}
+#'  \item{\emph{:: efmap}}{}
 #'}
 #'
 #' @usage ram.plot(dat,'plot.type',...)
@@ -271,6 +272,12 @@ ram.plot = function(
       emphasis$ring = T
       plot.type = 'pie'
     }
+  } else if (plot.type%in%c('efmap','ef')) {
+
+    if(plot.type=='efmap'){
+      dat = ram.preplot(dat,'efmap',emphasis$ef.order)
+    }
+
   }
 
 
@@ -370,6 +377,15 @@ ram.plot = function(
         x.breaks = dat$idx # Manual x.breaks not supported in barplot
       }
 
+    }
+
+    x.attributes$breaks = x.breaks
+    x.attributes$labs = x.labels
+
+  } else if (plot.type%in%c('efmap','ef')) {
+
+    if(!is.null(x.attributes$breaks)){
+      x.labels = as.character(x.attributes$breaks)
     }
 
     x.attributes$breaks = x.breaks
@@ -486,6 +502,17 @@ ram.plot = function(
 
     ## This is here because it needs to call the bar function.
     if(plot.type=='waterfall') plot.type = 'bar'
+
+  } else if (plot.type%in%c('efmap','ef')){
+
+    if(!is.null(y.attributes$breaks)){
+      y.breaks = y.labels = y.attributes$breaks
+    } else {
+      y.labels = y.breaks = NULL
+    }
+
+    y.attributes$breaks = y.breaks
+    y.attributes$labs = y.labels
 
   }
 

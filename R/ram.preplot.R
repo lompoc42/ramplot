@@ -18,7 +18,7 @@
 #' @return NULL
 #' @export
 #'
-ram.preplot = function(dat, type='standard'){
+ram.preplot = function(dat, type='standard',ef.order='sharpe'){
 
   if(type%in%c('standard','melt')){
 
@@ -88,53 +88,50 @@ ram.preplot = function(dat, type='standard'){
       mutate(ymax = round(cumsum(weights),2),
              center = ymax - weights / 2,
              ymin = c(0,head(ymax,-1)))
+
   } else if (type=='bar2') {
+
     ids = as.character(rownames(dat))
     tmp = as.data.frame(cbind(ids,dat))
     out = melt(tmp,id.vars = 'ids')
+
+  } else if (type=='efmap') {
+
+    #Create ia object Using Pairwise Complete
+    n.samples=200
+    if(all(dat>0)) dat = ifna(dat/mlag(dat)-1,0)
+    ia=create.ia(dat)
+    n = ia$n
+
+    # 0 <= x.i <= 0.8
+    constraints = new.constraints(n, lb = 0, ub = 1)
+
+    # SUM x.i = 1 ( total portfolio weight = 100%)
+    constraints = add.constraints(rep(1, n), 1, type = '=', constraints)
+
+    # create efficient frontier consisting of 100 portfolios
+    EF.mat = do.call(rbind,lapply(1:n.samples,function(x){
+      ia=create.ia(MASS::mvrnorm(252,ia$expected.return,ia$cov))
+      ef = portopt(ia, constraints, 100, 'Sample Efficient Frontier')
+      if(grepl("SHARPE",toupper(ef.order))) metric =ef$return/ef$risk
+      if(grepl("RISK",toupper(ef.order))) metric =ef$risk
+      if(grepl("RETURN",toupper(ef.order))) metric =ef$return
+      w=ef$weight
+      cbind(metric,rank(metric),w)
+    }))
+    colnames(EF.mat) = c("Metric","Rank",colnames(dat))
+    metric.dist = EF.mat[,"Metric"]
+    EF.mat=EF.mat[,-1]
+    EF.mat=EF.mat[order(EF.mat[,1]),]
+    EF.mat[,"Rank"]=metric.dist[order(metric.dist)]
+    EF.mat[]=apply(EF.mat,2,function(x) SMA(x,n.samples))
+    EF.mat=na.omit(EF.mat)
+    EF.mat=EF.mat[seq(1,nrow(EF.mat),n.samples/2),]
+
+    out = melt(EF.mat, id ='Rank')
+    out$Rank=EF.mat[,"Rank"]
+    out=out[-which(out$Var2=="Rank"),]
   }
 
   return(out)
-}
-
-ram.theme = function(
-  text.xaxis=12,
-  text.yaxis=12
-){
-
-  # ## Install the font and make sure it's loaded
-  # sysfonts::font_add(family= 'Helvetica Neue', regular = system.file("fonts", "HelveticaNeue.ttf", package="RAMplot"))
-
-  theme(
-
-    # Basic white background
-    plot.title = NULL,
-    panel.background = element_blank(),  # Clears defaults
-    legend.position = "none", # Turns off legend by default
-    legend.title = element_text(size=8),
-    legend.key = element_rect(fill = 'white'),
-
-    # Text specs
-    text = element_text(family='Helvetica Neue'),
-    axis.text.x = element_text(size = text.xaxis),
-    axis.text.y = element_text(size = text.yaxis),
-    legend.text = element_text(size = 10),
-
-    # Axis specs
-    axis.line = element_line(
-      color = '#023858',  # ReSolve specific color
-      size = 1.5,
-      lineend = 'round'),
-
-    # Tick specs
-    axis.ticks = element_blank(),   # Clears defaults
-    axis.ticks.y = element_line(
-      color = 'white',  # ReSolve specific color
-      size = 1.5,
-      linetype = 'solid',
-      lineend = 'square'
-    ),
-    axis.ticks.length = unit(2,'mm')
-
-  )
 }

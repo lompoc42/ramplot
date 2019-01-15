@@ -55,6 +55,7 @@
 #'     \item{waterfall = F}{}
 #'     \item{ring = F}{}
 #'     \item{density = F}{}
+#'     \item{ef.order = 'sharpe'}{}
 #'   }
 #'  }
 #'
@@ -117,7 +118,8 @@ ram.arguments = function(type='base',user.args){
         show.best.fit = T,
         waterfall = F,
         ring = F,
-        density = F
+        density = F,
+        ef.order = 'sharpe'
       )
     )
 
@@ -173,7 +175,8 @@ ram.arguments = function(type='base',user.args){
         show.best.fit = T,
         waterfall = F,
         ring = F,
-        density = F
+        density = F,
+        ef.order = 'sharpe'
       ),
 
       output = list(

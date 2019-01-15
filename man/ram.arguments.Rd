@@ -59,6 +59,7 @@ ram.arguments('type', ...)
     \item{waterfall = F}{}
     \item{ring = F}{}
     \item{density = F}{}
+    \item{ef.order = 'sharpe'}{}
   }
  }
 
