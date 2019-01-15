@@ -125,7 +125,11 @@ ram.plot = function(
       if(!sval%in%b4) b4 = sort(c(sval,b4))
 
       breaks = b4
-      labs = as.numeric(round(b4))
+      if(all(range(na.omit(as.numeric(as.matrix(dmat))))<2)){
+        labs = as.numeric(round(b4,titles$rounding))
+      } else {
+        labs = as.numeric(round(b4))
+      }
 
       if(!is.na(sval)) b1 = sval * b1
     }
@@ -388,7 +392,7 @@ ram.plot = function(
     dmat = dat[,-which(names(dat)%in%'idx')]
 
     ## Argument: y.attributes
-    if(!y.attributes$trans.percent&all(as.numeric(as.matrix(dmat))>0)){
+    if(!y.attributes$trans.percent&all(na.omit(as.numeric(as.matrix(dmat)))>0)){
 
       start.val = y.attributes$start.val
       scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
@@ -404,11 +408,13 @@ ram.plot = function(
       ## Argument: y.attributes$trans.percent
     } else if (y.attributes$trans.percent) {
 
-      if(all(as.numeric(dmat)>=0&as.numeric(dmat)<=1)){
+      dm2 = na.omit(as.numeric(as.matrix(dmat)))
+
+      if(all(as.numeric(dm2)>=0&as.numeric(dm2)<=1)){
         y.breaks = c(0,0.25,0.5,0.75,1)
         y.labs = paste0(comma(y.breaks* 100), "%")
       } else {
-        y.breaks = y.labs = pretty(as.numeric(as.matrix(dmat)))
+        y.breaks = y.labs = pretty(as.numeric(as.matrix(dm2)))
         y.labs = paste0(comma(y.breaks* 100), "%")
       }
 
@@ -484,7 +490,9 @@ ram.plot = function(
   }
 
 
+
   # Titles ------------------------------------------------------------------
+
 
 
   ## Argument: titles$legend.labels
