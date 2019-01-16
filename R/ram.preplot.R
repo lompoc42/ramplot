@@ -94,6 +94,7 @@ ram.preplot = function(dat, type='standard',ef.order='sharpe'){
     ids = as.character(rownames(dat))
     tmp = as.data.frame(cbind(ids,dat))
     out = melt(tmp,id.vars = 'ids')
+    out$ids = factor(out$ids,levels = ids)
 
   } else if (type=='efmap') {
 
