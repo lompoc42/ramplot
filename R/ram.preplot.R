@@ -98,7 +98,7 @@ ram.preplot = function(dat, type='standard',ef.order='sharpe'){
 
   } else if (type=='efmap') {
 
-    #Create ia object Using Pairwise Complete
+    #Create ia object Using Pairwise complete
     n.samples=200
     if(all(dat>0)) dat = ifna(dat/mlag(dat)-1,0)
     ia=create.ia(dat)

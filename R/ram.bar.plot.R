@@ -204,11 +204,11 @@ ram.bar.plot = function(
       p = p + scale_y_continuous(labels = percent)
     }
   } else {
+    y.limits = range(pretty(dat$value))
     p = p +
       scale_y_continuous(
         labels = percent,
-        limits = range(dat$value*1.1)
-      )
+        limits = y.limits)
   }
 
   ## Argument: update theme x.attributes$labs.tilt
