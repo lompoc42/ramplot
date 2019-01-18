@@ -393,9 +393,6 @@ ram.plot = function(
 
   }
 
-  ## Auto tilt x-axis labels when there's more than four breaks.
-  if(length(x.breaks)>4) x.attributes$labs.tilt = T
-
 
   # Y Axis Attributes -----------------------------------------------------
 
