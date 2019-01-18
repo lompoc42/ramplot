@@ -175,7 +175,7 @@ ram.equity.plot = function(
     )
   }
 
-  if(lr>1){
+  if(lr>=1){
     p = p + guides(colour = guide_legend(nrow = lr))
   }
 
