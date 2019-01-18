@@ -211,7 +211,7 @@ ram.plot = function(
 
       # Data: Ready dat to be analyzed
       # Argument: primary.column and secondary.column
-      singular = is.null(secondary.column) | ncol(dat)==1 # Will need later.
+      singular = is.null(secondary.column) | ncol(dat)==1
       if(singular){
         dat$comp = dat[,primary.column]
         dat[,primary.column] = 1:nrow(dat)
