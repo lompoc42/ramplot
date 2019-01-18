@@ -11,6 +11,7 @@
 #'  \item{\emph{:: pie}}{}
 #'  \item{\emph{:: ring}}{}
 #'  \item{\emph{:: efmap}}{}
+#'  \item{\emph{:: ef}}{}
 #'}
 #'
 #' @usage ram.plot(dat,'plot.type',...)
@@ -44,7 +45,7 @@ ram.plot = function(
     show.day = F,
     breaks = NULL,
     labs = NULL,
-    labs.tilt = T,
+    labs.tilt = F,
     text.labs = 12
   ),
 
@@ -80,7 +81,26 @@ ram.plot = function(
     secondary.column = NULL,
     show.best.fit = T,
     waterfall = F,
-    ring=F
+    ring=F,
+    ef.order = 'sharpe'
+  ),
+
+  ef = list(
+    custom.mean=NULL,
+    custom.covar=NULL,
+    plot.assets=T,
+    plot.CML=T,
+    asset.label.offset=0.0025,
+    CML.label.offset=c(-0.01,0.06),
+    asset.color='#89d2ff',
+    CML.color = '#9c3000',
+    ef.color = '#00488d',
+    rf=0,
+    scale = NULL,
+    t.horizon=10,
+    resampled=F,
+    n.samples = 1000,
+    lw=0.5
   ),
 
   output = list(
@@ -144,11 +164,12 @@ ram.plot = function(
 
 
   dat.raw = dat
-  args.final = ram.arguments(type = 'umbrella',user.args = list(x.attributes,y.attributes,titles,emphasis,output))
+  args.final = ram.arguments(type = 'umbrella',user.args = list(x.attributes,y.attributes,titles,emphasis,ef,output))
   x.attributes = args.final$x.attributes
   y.attributes = args.final$y.attributes
   titles = args.final$titles
   emphasis = args.final$emphasis
+  ef = args.final$ef
   output = args.final$output
 
 
@@ -211,7 +232,7 @@ ram.plot = function(
 
       # Data: Ready dat to be analyzed
       # Argument: primary.column and secondary.column
-      singular = is.null(secondary.column) | ncol(dat)==1
+      singular = is.null(secondary.column) | ncol(dat)==1 # Will need later.
       if(singular){
         dat$comp = dat[,primary.column]
         dat[,primary.column] = 1:nrow(dat)
@@ -275,7 +296,9 @@ ram.plot = function(
   } else if (plot.type%in%c('efmap','ef')) {
 
     if(plot.type=='efmap'){
-      dat = ram.preplot(dat,'efmap',emphasis$ef.order)
+      dat = ram.preplot(dat,'efmap',ef.order=emphasis$ef.order)
+    } else {
+      dat = ram.preplot(dat,'ef',ef=ef)
     }
 
   }
@@ -533,7 +556,7 @@ ram.plot = function(
   # Final Arguments ---------------------------------------------------------
 
 
-  args.final = ram.arguments(type = 'base',user.args = list(x.attributes,y.attributes,titles,emphasis))
+  args.final = ram.arguments(type = 'base',user.args = list(x.attributes,y.attributes,titles,emphasis,ef))
   x.attributes = args.final$x.attributes
   y.attributes = args.final$y.attributes
   titles = args.final$titles

@@ -17,6 +17,8 @@ ram.preplot(dat, type)
  \item{'waterfall'}{}
  \item{'correlation'}{}
  \item{'pie'}{}
+ \item{'efmap'}{}
+ \item{'ef'}{}
 }}
 }
 \description{

@@ -63,6 +63,26 @@ ram.arguments('type', ...)
   }
  }
 
+ \item{\emph{ef}}{
+  \enumerate{
+    \item{custom.mean = NULL}{}
+    \item{custom.covar = NULL}{}
+    \item{plot.assets = NULL}{}
+    \item{plot.CML = NULL}{}
+    \item{asset.label.offset = 0.0025}{}
+    \item{CML.label.offset = c(-0.01,0.06)}{}
+    \item{asset.color = '#89d2ff'}{}
+    \item{CML.color = '#9c3000'}{}
+    \item{ef.color = '#00488d'}{}
+    \item{rf = 0}{}
+    \item{scale = NULL}{}
+    \item{t.horizon = 10}{}
+    \item{resampled = F}{}
+    \item{n.samples = 1000}{}
+    \item{lw = 0.5}{}
+  }
+ }
+
  \item{\emph{output}}{
   \enumerate{
     \item{file.name = NULL}{}

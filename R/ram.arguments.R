@@ -59,6 +59,26 @@
 #'   }
 #'  }
 #'
+#'  \item{\emph{ef}}{
+#'   \enumerate{
+#'     \item{custom.mean = NULL}{}
+#'     \item{custom.covar = NULL}{}
+#'     \item{plot.assets = NULL}{}
+#'     \item{plot.CML = NULL}{}
+#'     \item{asset.label.offset = 0.0025}{}
+#'     \item{CML.label.offset = c(-0.01,0.06)}{}
+#'     \item{asset.color = '#89d2ff'}{}
+#'     \item{CML.color = '#9c3000'}{}
+#'     \item{ef.color = '#00488d'}{}
+#'     \item{rf = 0}{}
+#'     \item{scale = NULL}{}
+#'     \item{t.horizon = 10}{}
+#'     \item{resampled = F}{}
+#'     \item{n.samples = 1000}{}
+#'     \item{lw = 0.5}{}
+#'   }
+#'  }
+#'
 #'  \item{\emph{output}}{
 #'   \enumerate{
 #'     \item{file.name = NULL}{}
@@ -79,13 +99,13 @@ ram.arguments = function(type='base',user.args){
 
   if(type=='base'){
 
-    names(user.args) = c('x.attributes','y.attributes','titles','emphasis')
+    names(user.args) = c('x.attributes','y.attributes','titles','emphasis','ef')
 
     arg.list = arg.out = list(
       x.attributes = list(
         breaks = NULL,
         labs = NULL,
-        labs.tilt = F,
+        labs.tilt = T,
         text.labs = 12
       ),
 
@@ -120,7 +140,26 @@ ram.arguments = function(type='base',user.args){
         ring = F,
         density = F,
         ef.order = 'sharpe'
+      ),
+
+      ef = list(
+        custom.mean=NULL,
+        custom.covar=NULL,
+        plot.assets=T,
+        plot.CML=T,
+        asset.label.offset=0.0025,
+        CML.label.offset=c(-0.01,0.06),
+        asset.color='#89d2ff',
+        CML.color = '#9c3000',
+        ef.color = '#00488d',
+        rf=0,
+        scale = NULL,
+        t.horizon=10,
+        resampled=F,
+        n.samples = 1000,
+        lw=0.5
       )
+
     )
 
     for(arg in names(arg.list)){
@@ -131,14 +170,14 @@ ram.arguments = function(type='base',user.args){
 
   } else if (type=='umbrella') {
 
-    names(user.args) = c('x.attributes','y.attributes','titles','emphasis','output')
+    names(user.args) = c('x.attributes','y.attributes','titles','emphasis','ef','output')
 
     arg.list = arg.out = list(
       x.attributes = list(
         show.day = F,
         breaks = NULL,
         labs = NULL,
-        labs.tilt = F,
+        labs.tilt = T,
         text.labs = 12
       ),
 
@@ -177,6 +216,24 @@ ram.arguments = function(type='base',user.args){
         ring = F,
         density = F,
         ef.order = 'sharpe'
+      ),
+
+      ef = list(
+        custom.mean=NULL,
+        custom.covar=NULL,
+        plot.assets=T,
+        plot.CML=T,
+        asset.label.offset=0.0025,
+        CML.label.offset=c(-0.01,0.06),
+        asset.color='#89d2ff',
+        CML.color = '#9c3000',
+        ef.color = '#00488d',
+        rf=0,
+        scale = NULL,
+        t.horizon=10,
+        resampled=F,
+        n.samples = 1000,
+        lw=0.5
       ),
 
       output = list(
