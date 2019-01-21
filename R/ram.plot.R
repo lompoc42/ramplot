@@ -45,7 +45,7 @@ ram.plot = function(
     show.day = F,
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F,
+    labs.tilt = T,
     text.labs = 12
   ),
 

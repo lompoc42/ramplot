@@ -88,12 +88,19 @@ ram.bar.plot = function(
       ## Waterfall Barchart
       ## Plot: RAM colors
       if(sum(dat[-nrow(dat),1])==1){
-        cols = ram.colors(lookup = c('dark.blue','cian'))
-        cols = as.character(c(rep(cols[2],nrow(dat)-1),cols[1]))
+        cols = c(
+          ram.colors(lookup = 'dark.blue'),
+          ram.colors(lookup = 'rich.yellow')
+        )
+        cols = as.character(c(rep(cols[1],nrow(dat)-1),cols[2]))
         cols = cols[order(row.names(dat))]
       } else {
         v = as.numeric(dat$val[-nrow(dat)])
-        cols = ram.colors(lookup = c('cian','dark.orange','dark.blue'))
+        cols = c(
+          ram.colors(lookup = 'dark.blue'),
+          ram.colors(lookup = 'grey3'),
+          ram.colors(lookup = 'rich.yellow')
+        )
         cols = as.character(c(rep(cols[1],length(v[v>=0])),rep(cols[2],length(v[v<0])),cols[3]))
         cols = cols[order(row.names(dat))]
       }
@@ -145,7 +152,7 @@ ram.bar.plot = function(
     }
 
     # Data: modify colors and line sizes according to input
-    cols[ew] = '#e6c245'
+    cols[ew] = ram.colors(4)[4]
 
   }
 
@@ -331,7 +338,7 @@ ram.bar.plot = function(
   }
 
   ## Plot: Add legend rows
-  if(lr>=1){
+  if(lr>1){
     p = p + guides(fill = guide_legend(nrow = lr))
   }
 
