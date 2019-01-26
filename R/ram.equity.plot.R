@@ -58,6 +58,9 @@ ram.equity.plot = function(
   ## Plot: Line sizes
   line.sizes = rep(0.6,ncol(dat)-1)
 
+  ## Data: Naming order
+  namer = namer.raw = names(dat)[-ncol(dat)]
+
   ## Argument: titles$legend.labels
   if(!is.null(titles$legend.labels) & length(titles$legend.labels)==(ncol(dat)-1)){
     tmp = dat[,-ncol(dat)]
@@ -84,12 +87,18 @@ ram.equity.plot = function(
       ew = which(colnames(dat)%in%as.character(emphasis$emph.column))
     }
 
-    # emph.color
-    ec = cols[ew]
-
-    # Data: modify colors and line sizes according to input
+    # emph.color and line.sizes
+    n = length(cols)
     cols[c(ew,1)] = cols[c(1,ew)]
     line.sizes[ew] = 1.5
+
+    tmp.order = 1:length(namer)
+    names(tmp.order) = namer
+    tmp.order[c(ew,n)] = tmp.order[c(n,ew)]
+    line.sizes = line.sizes[tmp.order]
+    cols = cols[tmp.order]
+    namer = namer[tmp.order]
+    dat = dat[,c(tmp.order,ncol(dat))]
 
   }
 
@@ -98,6 +107,7 @@ ram.equity.plot = function(
 
 
   datplot = ram.preplot(dat[,-ncol(dat)],'melt')
+  datplot$variable = factor(datplot$variable,levels = namer)
   n = nrow(datplot)/length(unique(datplot$variable))
 
   ## Plot: Base build
@@ -154,7 +164,7 @@ ram.equity.plot = function(
   legend.labels = as.character(titles$legend.labels)
 
   if(length(legend.labels)==0){
-    legend.labels = names(dat)[-which(names(dat)%in%'idx')]
+    legend.labels = namer.raw
   }
 
 
@@ -208,7 +218,8 @@ ram.equity.plot = function(
       scale_color_manual(values=cols)
   } else {
     p = p +
-      scale_color_manual(values=cols, labels = legend.labels) +
+      scale_color_manual(values=cols,
+                         labels = legend.labels, breaks = namer.raw) +
       theme(legend.position = 'top', legend.title = element_blank())
   }
 
