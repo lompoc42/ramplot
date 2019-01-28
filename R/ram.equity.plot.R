@@ -16,23 +16,18 @@
 ram.equity.plot = function(
   dat,
   x.attributes = list(
-    show.day = F,
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F,
+    labs.tilt = T,
     text.labs = 12
   ),
 
   y.attributes = list(
-    start.val = 100,
     breaks = NULL,
     labs = NULL,
-    trans.log = T,
-    trans.percent = F,
     show.values = F,
-    currency = '$',
     text.labs = 12,
-    text.vals = 4
+    text.vals = 2
   ),
 
   titles = list(
@@ -40,9 +35,9 @@ ram.equity.plot = function(
     subtitle = NULL,
     legend.labels = NULL,
     legend.rows = 2,
-    caption = 'This is a test of the emergency broadcast system.',
+    caption = NULL,
     caption.size = 10,
-    caption.justify = 'left',
+    caption.justify = 'right',
     x = NULL,
     y = NULL,
     rounding = 1
@@ -57,7 +52,8 @@ ram.equity.plot = function(
     secondary.column = NULL,
     show.best.fit = T,
     waterfall = F,
-    ring=F,
+    ring = F,
+    density = F,
     ef.order = 'sharpe'
   ),
 
@@ -139,7 +135,7 @@ ram.equity.plot = function(
   # Begin Plot --------------------------------------------------------------
 
 
-  datplot = ram.preplot(dat[,-ncol(dat)],'melt')
+  datplot = ram.preplot(dat,'melt')
   datplot$variable = factor(datplot$variable,levels = namer)
   n = nrow(datplot)/length(unique(datplot$variable))
 
@@ -260,6 +256,9 @@ ram.equity.plot = function(
     p = p +
       scale_color_manual(values=cols)
   } else {
+    if(is.null(emphasis$emph.column)){
+      tmp.order=1:length(namer)
+    }
     p = p +
       scale_color_manual(values=cols,
                          labels = legend.labels, breaks = namer.raw) +
