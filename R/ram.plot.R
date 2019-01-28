@@ -45,7 +45,7 @@ ram.plot = function(
     show.day = F,
     breaks = NULL,
     labs = NULL,
-    labs.tilt = T,
+    labs.tilt = F,
     text.labs = 12
   ),
 
@@ -65,8 +65,10 @@ ram.plot = function(
     main = NULL,
     subtitle = NULL,
     legend.labels = NULL,
-    legend.rows = NULL,
-    caption = NULL,
+    legend.rows = 2,
+    caption = 'This is a test of the emergency broadcast system.',
+    caption.size = 10,
+    caption.justify = 'left',
     x = NULL,
     y = NULL,
     rounding = 1

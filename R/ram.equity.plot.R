@@ -16,25 +16,36 @@
 ram.equity.plot = function(
   dat,
   x.attributes = list(
+    show.day = F,
     breaks = NULL,
     labs = NULL,
-    labs.tilt = F
+    labs.tilt = F,
+    text.labs = 12
   ),
 
   y.attributes = list(
+    start.val = 100,
     breaks = NULL,
     labs = NULL,
-    show.values = F
+    trans.log = T,
+    trans.percent = F,
+    show.values = F,
+    currency = '$',
+    text.labs = 12,
+    text.vals = 4
   ),
 
   titles = list(
     main = NULL,
     subtitle = NULL,
     legend.labels = NULL,
-    legend.rows = NULL,
-    caption = NULL,
+    legend.rows = 2,
+    caption = 'This is a test of the emergency broadcast system.',
+    caption.size = 10,
+    caption.justify = 'left',
     x = NULL,
-    y = NULL
+    y = NULL,
+    rounding = 1
   ),
 
   emphasis = list(
@@ -44,7 +55,28 @@ ram.equity.plot = function(
     hline.color = NULL,
     primary.column = 1,
     secondary.column = NULL,
-    show.best.fit = T
+    show.best.fit = T,
+    waterfall = F,
+    ring=F,
+    ef.order = 'sharpe'
+  ),
+
+  ef = list(
+    custom.mean=NULL,
+    custom.covar=NULL,
+    plot.assets=T,
+    plot.CML=T,
+    asset.label.offset=0.0025,
+    CML.label.offset=c(-0.01,0.06),
+    asset.color='#89d2ff',
+    CML.color = '#9c3000',
+    ef.color = '#00488d',
+    rf=0,
+    scale = NULL,
+    t.horizon=10,
+    resampled=F,
+    n.samples = 1000,
+    lw=0.5
   )
 ){
 
@@ -96,6 +128,7 @@ ram.equity.plot = function(
     names(tmp.order) = namer
     tmp.order[c(ew,n)] = tmp.order[c(n,ew)]
     line.sizes = line.sizes[tmp.order]
+    names(line.sizes) = namer
     cols = cols[tmp.order]
     namer = namer[tmp.order]
     dat = dat[,c(tmp.order,ncol(dat))]
@@ -178,12 +211,22 @@ ram.equity.plot = function(
       y = as.character(y.title)
     )
 
-  if(any(sapply(titles,length)!=0)){
-    p = p + theme(
-      plot.title = element_text(size=12, hjust=0.5),
-      plot.subtitle = element_text(size=10, hjust=0.5,vjust=-1)
-    )
+  ## Caption additions
+  if(titles$caption.justify=='right'){
+    titles$caption.justify = 1
+  } else if (titles$caption.justify=='center') {
+    titles$caption.justify = 0.5
+  } else if (titles$caption.justify=='left') {
+    titles$caption.justify = 0
   }
+
+  ## Title sizes and justification
+  p = p + theme(
+    plot.title = element_text(size=12, hjust=0.5),
+    plot.subtitle = element_text(size=10, hjust=0.5,vjust=-1),
+    plot.caption = element_text(
+      hjust = titles$caption.justify,
+      size = titles$caption.size))
 
   if(lr>=1){
     p = p + guides(colour = guide_legend(nrow = lr))
@@ -220,7 +263,8 @@ ram.equity.plot = function(
     p = p +
       scale_color_manual(values=cols,
                          labels = legend.labels, breaks = namer.raw) +
-      theme(legend.position = 'top', legend.title = element_blank())
+      theme(legend.position = 'top', legend.title = element_blank()) +
+      guides(color = guide_legend(override.aes = list(size = line.sizes[tmp.order])))
   }
 
   return(p)

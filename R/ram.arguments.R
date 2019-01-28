@@ -121,8 +121,10 @@ ram.arguments = function(type='base',user.args){
         main = NULL,
         subtitle = NULL,
         legend.labels = NULL,
-        legend.rows = NULL,
+        legend.rows = 2,
         caption = NULL,
+        caption.size = 10,
+        caption.justify = 'right',
         x = NULL,
         y = NULL,
         rounding = 1
@@ -197,8 +199,10 @@ ram.arguments = function(type='base',user.args){
         main = NULL,
         subtitle = NULL,
         legend.labels = NULL,
-        legend.rows = NULL,
+        legend.rows = 2,
         caption = NULL,
+        caption.size = 10,
+        caption.justify = 'right',
         x = NULL,
         y = NULL,
         rounding = 1
