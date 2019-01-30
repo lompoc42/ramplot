@@ -68,7 +68,8 @@ ram.bar.plot = function(
     p = ggplot(dat, aes(x=1:nrow(dat))) +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs
+        text.yaxis = y.attributes$text.labs,
+        text.legend = titles$text.legend
       )
 
     ## Argument: emphasis$waterfall
@@ -124,7 +125,8 @@ ram.bar.plot = function(
                    label=value)) +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs
+        text.yaxis = y.attributes$text.labs,
+        text.legend = titles$text.legend
       )
 
     cols = ram.colors(length(unique(dat$variable)))

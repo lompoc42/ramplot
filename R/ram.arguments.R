@@ -36,6 +36,7 @@
 #'     \item{subtitle = NULL}{}
 #'     \item{legend.labels = NULL}{}
 #'     \item{legend.rows = NULL}{}
+#'     \item{text.legend = 10}{}
 #'     \item{caption = NULL}{}
 #'     \item{x = NULL}{}
 #'     \item{y = NULL}{}
@@ -122,6 +123,7 @@ ram.arguments = function(type='base',user.args){
         subtitle = NULL,
         legend.labels = NULL,
         legend.rows = 2,
+        text.legend = 10,
         caption = NULL,
         caption.size = 10,
         caption.justify = 'right',
@@ -200,6 +202,7 @@ ram.arguments = function(type='base',user.args){
         subtitle = NULL,
         legend.labels = NULL,
         legend.rows = 2,
+        text.legend = 10,
         caption = NULL,
         caption.size = 10,
         caption.justify = 'right',

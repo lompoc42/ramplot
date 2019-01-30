@@ -105,7 +105,8 @@ ram.ef.plot = function(
     geom_point(size=ef$lw) +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs
+      text.yaxis = y.attributes$text.labs,
+      text.legend = titles$text.legend
     )
 
 

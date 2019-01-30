@@ -4,7 +4,7 @@
 \alias{ram.theme}
 \title{ReSolve ggplot branding function}
 \usage{
-ram.theme(text.xaxis = 12, text.yaxis = 12)
+ram.theme(text.xaxis = 12, text.yaxis = 12, text.legend = 10)
 }
 \description{
 Returns a ReSolve branded theme for ggplot2 objects.

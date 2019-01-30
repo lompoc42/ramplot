@@ -72,7 +72,8 @@ ram.transition.plot = function(
     geom_area(position = 'stack') +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs
+      text.yaxis = y.attributes$text.labs,
+      text.legend = titles$text.legend
     )
 
   # X and Y axis ------------------------------------------------------------

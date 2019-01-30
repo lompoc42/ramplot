@@ -40,6 +40,7 @@ ram.arguments('type', ...)
     \item{subtitle = NULL}{}
     \item{legend.labels = NULL}{}
     \item{legend.rows = NULL}{}
+    \item{text.legend = 10}{}
     \item{caption = NULL}{}
     \item{x = NULL}{}
     \item{y = NULL}{}

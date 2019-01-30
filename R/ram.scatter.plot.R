@@ -62,7 +62,8 @@ ram.scatter.plot = function(
   p = ggplot(dat, aes(x=dat[,primary.column])) +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs
+      text.yaxis = y.attributes$text.labs,
+      text.legend = titles$text.legend
     ) +
     geom_point(
       aes(y=comp, color=names(dat)[secondary.column]),

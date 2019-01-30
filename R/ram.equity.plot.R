@@ -143,7 +143,8 @@ ram.equity.plot = function(
   p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs
+      text.yaxis = y.attributes$text.labs,
+      text.legend = titles$text.legend
     ) +
     geom_line(size=rep(line.sizes,each=n))
 
@@ -248,7 +249,6 @@ ram.equity.plot = function(
       geom_hline(yintercept = hlv,
                  color = hlc,
                  size = hls)
-
   }
 
   ## Final plot out
