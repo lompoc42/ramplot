@@ -84,7 +84,7 @@ ram.equity.plot = function(
   cols = ram.colors(ncol(dat)-1)
 
   ## Plot: Line sizes
-  line.sizes = rep(0.6,ncol(dat)-1)
+  line.sizes = line.sizes.raw = rep(0.6,ncol(dat)-1)
 
   ## Data: Naming order
   namer = namer.raw = names(dat)[-ncol(dat)]
@@ -116,19 +116,18 @@ ram.equity.plot = function(
     }
 
     # emph.color and line.sizes
-    n = length(cols)
-    cols[c(ew,1)] = cols[c(1,ew)]
+    corder = c(ew,which(!1:length(namer)%in%ew))
+    corder = match(1:length(namer),corder)
+
+    dorder = c(which(!1:length(namer)%in%ew),rev(ew))
+    cols = (cols[corder])[dorder]
+
     line.sizes[ew] = 1.5
+    line.sizes.raw = line.sizes
+    line.sizes = line.sizes[dorder]
 
-    tmp.order = 1:length(namer)
-    names(tmp.order) = namer
-    tmp.order[c(ew,n)] = tmp.order[c(n,ew)]
-    line.sizes = line.sizes[tmp.order]
-    names(line.sizes) = namer
-    cols = cols[tmp.order]
-    namer = namer[tmp.order]
-    dat = dat[,c(tmp.order,ncol(dat))]
-
+  } else {
+    dorder = 1:length(namer)
   }
 
 
@@ -136,7 +135,7 @@ ram.equity.plot = function(
 
 
   datplot = ram.preplot(dat,'melt')
-  datplot$variable = factor(datplot$variable,levels = namer)
+  datplot$variable = factor(datplot$variable,levels = namer[dorder])
   n = nrow(datplot)/length(unique(datplot$variable))
 
   ## Plot: Base build
@@ -256,15 +255,12 @@ ram.equity.plot = function(
     p = p +
       scale_color_manual(values=cols)
   } else {
-    if(is.null(emphasis$emph.column)){
-      tmp.order=1:length(namer)
-    }
     p = p +
-      scale_color_manual(values=cols,
-                         labels = legend.labels, breaks = namer.raw) +
-      theme(legend.position = 'top', legend.title = element_blank()) +
-      guides(color = guide_legend(override.aes = list(size = line.sizes[tmp.order])))
+      scale_color_manual(values=cols,labels=legend.labels,breaks=namer) +
+      guides(color = guide_legend(override.aes = list(size = line.sizes.raw))) +
+      theme(legend.position = 'top',legend.title = element_blank())
   }
 
   return(p)
 }
+

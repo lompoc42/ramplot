@@ -68,8 +68,7 @@ ram.bar.plot = function(
     p = ggplot(dat, aes(x=1:nrow(dat))) +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs,
-        text.legend = titles$text.legend
+        text.yaxis = y.attributes$text.labs
       )
 
     ## Argument: emphasis$waterfall
@@ -125,8 +124,7 @@ ram.bar.plot = function(
                    label=value)) +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs,
-        text.legend = titles$text.legend
+        text.yaxis = y.attributes$text.labs
       )
 
     cols = ram.colors(length(unique(dat$variable)))
@@ -142,7 +140,7 @@ ram.bar.plot = function(
 
 
   ## Plot: Line and color emphasis for input
-  if(!is.null(emphasis$emph.column)&(ncol(dat)==2|emphasis$waterfall)){
+  if(!is.null(emphasis$emph.column)&(ncol(dat)>1|emphasis$waterfall)){
 
     ## Argument: emphasis()
 
@@ -154,7 +152,7 @@ ram.bar.plot = function(
     }
 
     # Data: modify colors and line sizes according to input
-    cols[ew] = ram.colors(4)[4]
+    cols[ew] = rep(ram.colors(4)[4],length(ew))
 
   }
 
