@@ -211,7 +211,13 @@ ram.bar.plot = function(
       p = p + scale_y_continuous(labels = percent)
     }
   } else {
-    y.limits = range(pretty(dat$value))
+
+    if(all(dat$value>0)){
+      y.limits = c(0,max(range(pretty(dat$value))))
+    } else {
+      y.limits = range(pretty(dat$value))
+    }
+
     p = p +
       scale_y_continuous(
         labels = percent,

@@ -93,8 +93,9 @@ ram.preplot = function(dat, type='standard',ef.order='sharpe',ef=list()){
 
   } else if (type=='bar2') {
 
-    ids = as.character(rownames(dat))
-    tmp = as.data.frame(cbind(ids,dat))
+    dm = as.data.frame(dat)
+    ids = as.character(rownames(dm))
+    tmp = as.data.frame(cbind(ids,dm))
     out = melt(tmp,id.vars = 'ids')
     out$ids = factor(out$ids,levels = ids)
 

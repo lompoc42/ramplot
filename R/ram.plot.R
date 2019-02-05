@@ -264,10 +264,10 @@ ram.plot = function(
 
       cn = rownames(as.data.frame(dat))
       c1 = suppressWarnings(inherits(try(as.Date(cn),T),'try-error'))
-      c2 = suppressWarnings(try(as.integer(cn),T))
-      c2 = length(na.omit(c2))==0
+      c2 = suppressWarnings(try(is.integer(as.integer(cn)),T))
+      c3 = ncol(dat.raw)>=2
 
-      if(c1&c2){
+      if((c1&c2)|c3){
         dat = ram.preplot(dat,'bar2')
       } else {
         dat = ram.preplot(dat,'standard')
@@ -371,7 +371,7 @@ ram.plot = function(
   } else if (plot.type%in%c('bar','waterfall')) {
 
     ## This section deals with use-case of a data-frame input.
-    if(!is.data.frame(dat.raw)){
+    if(!is.data.frame(dat.raw)&ncol(dat.raw)==1){
 
       ## Argument: x.attributes()
       x.breaks = 1:nrow(dat) # Manual x.breaks not supported in barplot
