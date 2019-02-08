@@ -52,7 +52,7 @@ ram.efmap.plot = function(
   # Colors, Line Sizes, and Legend Titles -----------------------------------
 
   ## Plot: Colors and line sizes
-  cols=ram.colors(ncol(dat[,-1]))
+  cols = ram.colors(length(unique(as.character(dat$Var2))))
 
 
   # Begin Plot --------------------------------------------------------------
@@ -63,8 +63,7 @@ ram.efmap.plot = function(
     geom_area(position = 'stack') +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs,
-      text.legend = titles$text.legend
+      text.yaxis = y.attributes$text.labs
     )
 
 
@@ -143,7 +142,7 @@ ram.efmap.plot = function(
     )
   }
 
-  if(lr>=1){
+  if(lr>1){
     p = p + guides(colour = guide_legend(nrow = lr))
   }
 
