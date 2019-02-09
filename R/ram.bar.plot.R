@@ -344,7 +344,7 @@ ram.bar.plot = function(
   }
 
   ## Plot: Add legend rows
-  if(lr>1){
+  if(lr>0){
     p = p + guides(fill = guide_legend(nrow = lr))
   }
 

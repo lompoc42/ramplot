@@ -65,7 +65,7 @@ ram.plot = function(
     main = NULL,
     subtitle = NULL,
     legend.labels = NULL,
-    legend.rows = 2,
+    legend.rows = NULL,
     caption = NULL,
     caption.size = 10,
     caption.justify = 'left',
@@ -162,6 +162,35 @@ ram.plot = function(
   }
 
 
+  # Dates Handler -----------------------------------------------------------
+
+
+  ## Data: Date specific handling
+  if(is.timeBased(index(dat))){
+
+    ## Intraday data not supported
+    if(is.minute.data(dat))stop('Intraday data not currently supported', call. = FALSE, domain = NA)
+
+    ## Data: End dates
+    if(!is.null(end.date)){
+      if(is.null(dat[as.Date(end.date)])){
+        warning('end.date not found in data. Date format is `2000-12-31`', call. = FALSE, domain = NA)
+      } else {
+        dat = dat[paste0('::',as.character(end.date))]
+      }
+    }
+
+    ## Data: Start dates
+    if(!is.null(start.date)){
+      if(is.null(dat[as.Date(start.date)])){
+        warning('start.date not found in data. Date format is `2000-12-31`', call. = FALSE, domain = NA)
+      } else {
+        dat = dat[paste0(as.character(start.date),'::')]
+      }
+    }
+  }
+
+
   # Argument Cleanup --------------------------------------------------------
 
 
@@ -175,41 +204,11 @@ ram.plot = function(
   output = args.final$output
 
 
-  # Data --------------------------------------------------------------------
-
-
-  dat = dat.raw = ram.dat.standard(dat)
-
-  ## Data: Date specific handling
-  if(is.timeBased(index(dat))){
-
-    ## Intraday data not supported
-    if(is.minute.data(dat))stop('Intraday data not currently supported', call. = FALSE, domain = NA)
-
-    ## Data: End dates
-    if(!is.null(end.date)){
-      if(is.null(dat[as.Date(end.date)])){
-        stop('end.date not found in data. Date format is `2000-12-31`', call. = FALSE, domain = NA)
-      } else {
-        dat = dat[paste0('::',as.character(end.date))]
-      }
-    }
-
-    ## Data: Start dates
-    if(!is.null(start.date)){
-      if(is.null(dat[as.Date(start.date)])){
-        stop('end.date not found in data. Date format is `2000-12-31`', call. = FALSE, domain = NA)
-      } else {
-        dat = dat[paste0(as.character(start.date),'::')]
-      }
-    }
-  }
-
-
-
   # Initial Data Handling ---------------------------------------------------
 
 
+  ### Data standardization
+  dat = dat.raw = ram.dat.standard(dat)
 
   ### Data transform for Equity and Scatter Plots
   if(plot.type%in%c('equity','scatter','transition')){
