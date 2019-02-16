@@ -54,9 +54,7 @@ ram.equity.plot = function(
     waterfall = F,
     ring = F,
     density = F,
-    bootstap = F,
-    bootstrap.probs = c(.01,.05,.5,.95,.99),
-    bootstrap.alpha = 0.25,
+    alpha = 1,
     ef.order = 'sharpe'
   ),
 
@@ -79,50 +77,14 @@ ram.equity.plot = function(
   )
 ){
 
+
   # Colors, Line Sizes, Legend Titles, Empghasis ----------------------------
 
   ## Plot: Colors and line sizes
-
-  cols = as.character(na.omit(ram.colors(ncol(dat)-1)))
-
-  if(emphasis$bootstrap==T){
-
-
-    tmp = as.matrix(dat[,-ncol(dat)])
-    a1 = ncol(tmp)
-
-    cols = grDevices::colorRampPalette(col2hcl(
-      ram.colors(lookup = c('dark.blue','cian'))))
-    cols = as.character(cols(ncol(tmp)))
-
-    wh = matrixStats::rowMedians(tmp)
-    wh = as.numeric(colSums(tmp - expand.cols(wh,ncol(tmp)))^2)
-    dorder = order(wh,decreasing = T)
-
-    quantiles = as.data.frame(
-      rowQuantiles(tmp,probs = emphasis$bootstrap.probs))
-    a2 = ncol(quantiles)
-    tmp = cbind(tmp,quantiles)
-    names(tmp) = c(names(dat[,-ncol(dat)]),names(quantiles))
-    dat = as.data.frame(cbind(tmp,dat$idx))
-    names(dat) = c(names(dat)[-ncol(dat)],'idx')
-
-    dorder = c(dorder,max(dorder)+(1:ncol(quantiles)))
-    cols = c(cols,ram.colors(ncol(quantiles)))
-    a1 = rep(emphasis$bootstrap.alpha,a1)
-    a2 = rep(1,a2)
-
-  } else if (length(cols)!=(ncol(dat)-1)) {
-    cols = rep(cols,ncol(dat)-1)
-    cols = cols[1:(ncol(dat)-1)]
-  }
+  cols = ram.colors(ncol(dat)-1)
 
   ## Plot: Line sizes
   line.sizes = line.sizes.raw = rep(0.6,ncol(dat)-1)
-  if(emphasis$bootstrap){
-    line.sizes = line.sizes.raw = rep(0.1,ncol(dat)-(ncol(quantiles)+1))
-    line.sizes = c(line.sizes,rep(0.5,ncol(quantiles)))
-  }
 
   ## Data: Naming order
   namer = namer.raw = names(dat)[-ncol(dat)]
@@ -142,7 +104,7 @@ ram.equity.plot = function(
 
 
   ## Plot: Line and color emphasis for input
-  if(!is.null(emphasis$emph.column)&!emphasis$bootstrap){
+  if(!is.null(emphasis$emph.column)){
 
     ## Argument: emphasis()
 
@@ -164,7 +126,7 @@ ram.equity.plot = function(
     line.sizes.raw = line.sizes
     line.sizes = line.sizes[dorder]
 
-  } else if (!emphasis$bootstrap) {
+  } else {
     dorder = 1:length(namer)
   }
 
@@ -176,25 +138,17 @@ ram.equity.plot = function(
   datplot$variable = factor(datplot$variable,levels = namer[dorder])
   n = nrow(datplot)/length(unique(datplot$variable))
 
+  ## Argument: emphasis$alpha
+  alf = emphasis$alpha
+
   ## Plot: Base build
-  if(!emphasis$bootstrap){
-    p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +
-      ram.theme(
-        text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs,
-        text.legend = titles$text.legend
-      ) +
-      geom_line(size=rep(line.sizes,each=n))
-  } else {
-    alf = c(rep(a1,n),rep(a2,n))
-    p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +
-      ram.theme(
-        text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs,
-        text.legend = titles$text.legend
-      ) +
-      geom_line(size=rep(line.sizes,each=n),alpha=alf)
-  }
+  p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +
+    ram.theme(
+      text.xaxis = x.attributes$text.labs,
+      text.yaxis = y.attributes$text.labs,
+      text.legend = titles$text.legend
+    ) +
+    geom_line(size=rep(line.sizes,each=n),alpha=alf)
 
 
   # X and Y axis ------------------------------------------------------------
@@ -227,6 +181,7 @@ ram.equity.plot = function(
   # Titles ----------------------------------------------------------------
 
 
+
   ## Plot: Titles
 
   ## Argument: titles()
@@ -238,12 +193,12 @@ ram.equity.plot = function(
 
   ## Argument: legend.rows
   lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
-  if(emphasis$bootstrap) lr = 0
   legend.labels = as.character(titles$legend.labels)
 
   if(length(legend.labels)==0){
     legend.labels = namer.raw
   }
+
 
   ## Plot: Add titles
   p = p +
@@ -295,7 +250,7 @@ ram.equity.plot = function(
   }
 
   ## Final plot out
-  if(lr==0|emphasis$bootstrap){
+  if(lr==0){
     p = p +
       scale_color_manual(values=cols)
   } else {
@@ -306,7 +261,6 @@ ram.equity.plot = function(
       theme(legend.position = 'top',legend.title = element_blank())
   }
 
-  p
-
   return(p)
 }
+
