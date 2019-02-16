@@ -15,4 +15,5 @@ Depends:
   reshape2 (>= 1.4.2),
   extrafont (>= 0.13),
   showtext (>= 0.5.1),
+  matrixStats (>= 0.54.0),
 RoxygenNote: 6.1.1
