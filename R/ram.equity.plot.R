@@ -238,7 +238,7 @@ ram.equity.plot = function(
 
   ## Argument: legend.rows
   lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
-  if(ncol(dat)>25) lr = 0
+  if(emphasis$bootstrap) lr = 0
   legend.labels = as.character(titles$legend.labels)
 
   if(length(legend.labels)==0){
@@ -272,10 +272,6 @@ ram.equity.plot = function(
       hjust = titles$caption.justify,
       size = titles$caption.size))
 
-  if(lr>=1){
-    p = p + guides(colour = guide_legend(nrow = lr))
-  }
-
 
   # Emphasis ----------------------------------------------------------------
 
@@ -299,16 +295,14 @@ ram.equity.plot = function(
   }
 
   ## Final plot out
-  if(lr==0){
-    p = p +
-      scale_color_manual(values=cols)
-  } else if (emphasis$bootstrap) {
+  if(lr==0|emphasis$bootstrap){
     p = p +
       scale_color_manual(values=cols)
   } else {
     p = p +
       scale_color_manual(values=cols,labels=legend.labels,breaks=namer) +
-      guides(color = guide_legend(override.aes = list(size = line.sizes.raw))) +
+      guides(color=guide_legend(nrow=lr,
+                                override.aes = list(size = line.sizes.raw))) +
       theme(legend.position = 'top',legend.title = element_blank())
   }
 
