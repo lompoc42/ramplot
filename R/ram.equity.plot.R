@@ -56,7 +56,7 @@ ram.equity.plot = function(
     density = F,
     bootstap = F,
     bootstrap.probs = c(.01,.05,.5,.95,.99),
-    bootstrap.alpha = 0.35,
+    bootstrap.alpha = 0.25,
     ef.order = 'sharpe'
   ),
 
