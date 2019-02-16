@@ -263,4 +263,3 @@ ram.equity.plot = function(
 
   return(p)
 }
-

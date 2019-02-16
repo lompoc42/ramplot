@@ -143,9 +143,7 @@ ram.arguments = function(type='base',user.args){
         waterfall = F,
         ring = F,
         density = F,
-        bootstrap = F,
-        bootstrap.probs = c(.01,.05,.5,.95,.99),
-        bootstrap.alpha = 0.35,
+        alpha = 1,
         ef.order = 'sharpe'
       ),
 
@@ -225,9 +223,7 @@ ram.arguments = function(type='base',user.args){
         waterfall = F,
         ring = F,
         density = F,
-        bootstrap = F,
-        bootstrap.probs = c(.01,.05,.5,.95,.99),
-        bootstrap.alpha = 0.35,
+        alpha = 1,
         ef.order = 'sharpe'
       ),
 
