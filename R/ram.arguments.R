@@ -113,7 +113,7 @@ ram.arguments = function(type='base',user.args){
       y.attributes = list(
         breaks = NULL,
         labs = NULL,
-        show.values = F,
+        show.values = T,
         text.labs = 12,
         text.vals = 2
       ),
@@ -133,7 +133,9 @@ ram.arguments = function(type='base',user.args){
       ),
 
       emphasis = list(
+        alpha = NULL,
         emph.column = NULL, # Can be numeric or character
+        pct.column = NULL,
         hline = NULL,
         hline.size = NULL,
         hline.color = NULL,
@@ -192,7 +194,7 @@ ram.arguments = function(type='base',user.args){
         labs = NULL,
         trans.log = T,
         trans.percent = F,
-        show.values = F,
+        show.values = T,
         currency = '$',
         text.labs = 12,
         text.vals = 4
@@ -213,7 +215,9 @@ ram.arguments = function(type='base',user.args){
       ),
 
       emphasis = list(
+        alpha = NULL,
         emph.column = NULL, # Can be numeric or character
+        pct.column = NULL,
         hline = NULL,
         hline.size = NULL,
         hline.color = NULL,

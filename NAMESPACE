@@ -2,6 +2,7 @@
 
 export(ram.arguments)
 export(ram.bar.plot)
+export(ram.bootstrap.plot)
 export(ram.colors)
 export(ram.correlation.plot)
 export(ram.dat.standard)

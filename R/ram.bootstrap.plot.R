@@ -1,19 +1,15 @@
-#' @title ReSolve Equity Plotting Function
+#' @title ReSolve Bootstrap Plotting Function
 #'
-#' @description Base Plotting Functions: Correlation and Density
-#' @usage ram.equity.plot(dat,...)
+#' @description Base Plotting Functions: Bootstrap
+#' @usage ram.bootstrap.plot(dat,...)
 #'
-#' @param dat Data is assumed to be a matrix or vector of prices
+#' @param dat Data is assumed to be a matrix or vector of returns
 #' @param ... Complete argument details are located in \code{\link[RAMplot:ram.arguments]{ram.arguments}}
-#'
-#' @examples
-#'
-#' ram.equity.plot(dat,...)
 #'
 #' @return NULL
 #' @export
 #'
-ram.equity.plot = function(
+ram.bootstrap.plot = function(
   dat,
   x.attributes = list(
     breaks = NULL,
@@ -54,7 +50,7 @@ ram.equity.plot = function(
     waterfall = F,
     ring = F,
     density = F,
-    alpha = 1,
+    alpha = 0.25,
     ef.order = 'sharpe'
   ),
 
@@ -77,79 +73,111 @@ ram.equity.plot = function(
   )
 ){
 
-
   # Colors, Line Sizes, Legend Titles, Empghasis ----------------------------
 
-  ## Plot: Colors and line sizes
-  cols = ram.colors(ncol(dat)-1)
+  ## First find out what we're doing
 
-  ## Plot: Line sizes
-  line.sizes = line.sizes.raw = rep(0.6,ncol(dat)-1)
+  pct.plot = em.plot = F
+  wh = c()
 
-  ## Data: Naming order
-  namer = namer.raw = names(dat)[-ncol(dat)]
+  ## Check for percentile columns
+  if(!is.null(emphasis$pct.column)){
 
-  ## Argument: titles$legend.labels
-  if(!is.null(titles$legend.labels) & length(titles$legend.labels)==(ncol(dat)-1)){
-    tmp = dat[,-ncol(dat)]
-    names(tmp) = titles$legend.labels
-    tmp = cbind(tmp,dat[,ncol(dat)])
-  } else if (!is.null(titles$legend.labels) & length(titles$legend.labels)!=ncol(dat)){
-    warning('Attribute set to default: number of legend names must match dat',
-            call. = FALSE, domain = NA)
+    ## Argument: emphasis$pct.column
+    if(is.numeric(emphasis$pct.column)){
+      wh1 = as.numeric(emphasis$pct.column)
+    } else {
+      wh1 = which(colnames(dat)%in%as.character(emphasis$pct.column))
+    }
+    wh = c(wh,wh1)
+    d1 = dat[,wh1,drop=F]
+    pct.plot = T
+
   }
 
-
-  # Column Emphasis ---------------------------------------------------------
-
-
-  ## Plot: Line and color emphasis for input
+  ## Check for emphasis columns
   if(!is.null(emphasis$emph.column)){
 
-    ## Argument: emphasis()
-
-    # emph.column
+    ## Argument: emphasis$emph.column
     if(is.numeric(emphasis$emph.column)){
-      ew = as.numeric(emphasis$emph.column)
+      wh2 = as.numeric(emphasis$emph.column)
     } else {
-      ew = which(colnames(dat)%in%as.character(emphasis$emph.column))
+      wh2 = which(colnames(dat)%in%as.character(emphasis$emph.column))
     }
-
-    # emph.color and line.sizes
-    corder = c(ew,which(!1:length(namer)%in%ew))
-    corder = match(1:length(namer),corder)
-
-    dorder = c(which(!1:length(namer)%in%ew),rev(ew))
-    cols = (cols[corder])[dorder]
-
-    line.sizes[ew] = 1.5
-    line.sizes.raw = line.sizes
-    line.sizes = line.sizes[dorder]
-
-  } else {
-    dorder = 1:length(namer)
+    wh = c(wh,wh2)
+    d2 = dat[,wh2,drop=F]
+    em.plot = T
   }
 
 
-  # Begin Plot --------------------------------------------------------------
+  # Begin Plot -----------------------------------------------------------
 
 
-  datplot = ram.preplot(dat,'melt')
-  datplot$variable = factor(datplot$variable,levels = namer[dorder])
-  n = nrow(datplot)/length(unique(datplot$variable))
+  d0 = dat[,which(!1:ncol(dat)%in%c(wh,ncol(dat))),drop=F]
+  n = ncol(d0)
+  rankers = matrixStats::rowMedians(as.matrix(d0))
+  rankers = as.numeric(colSums(d0 - expand.cols(rankers,ncol(d0)))^2)
+  dorder = order(rankers,decreasing = T)
 
-  ## Argument: emphasis$alpha
-  alf = emphasis$alpha
-  if(is.null(alf))alf = 1
+  namer = names(d0)
+  d0 = ram.preplot(d0,'melt')
+  d0$variable = factor(d0$variable,levels = namer[dorder])
+  n = nrow(d0)/length(unique(d0$variable))
 
-  ## Plot: Base build
-  p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +
+  cols1 = grDevices::colorRampPalette(col2hcl( # Gradient function
+    ram.colors(lookup = c('dark.blue','cian'))))
+  cols1 = as.character(cols1(n))
+  cols1 = as.character(sapply(cols1,function(z)rep(z,n)))
+  alf = ifelse(is.null(emphasis$alpha),1,emphasis$alpha)
+
+  p = ggplot() +
+    geom_line(data = d0,aes(x=idx,y=value,group=variable),
+              color = cols1,
+              size = 0.25,
+              alpha = alf)
+
+
+  # Add percentiles ---------------------------------------------------------
+
+
+  if(pct.plot){
+    d1 = ram.preplot(dat[,wh1,drop=F],'melt')
+    n = nrow(d1)/length(unique(d1$variable))
+    cols2 = as.character(sapply(ram.colors(length(unique(d1$variable))),function(z)rep(z,n)))
+    p = p + geom_line(data = d1,aes(x=idx,y=value,group=variable),
+                      color = cols2,
+                      size = 0.6)
+  }
+
+
+  # Add emphasis columns ----------------------------------------------------
+
+
+  if(em.plot){
+    d2 = ram.preplot(dat[,wh2,drop=F],'melt')
+
+    ## em-specific items. Can be made arguments
+    em.cols = ram.colors(length(unique(d2$variable)))
+    em.labs = as.character(unique(d2$variable))
+    em.lines = rep(1.25,length(unique(d2$variable)))
+
+    p = p + geom_line(data = d2,aes(x=idx,y=value,color=variable),
+                      size = em.lines,
+                      show.legend = T)
+  }
+
+  ## Plot: theme
+  p = p +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
       text.yaxis = y.attributes$text.labs,
       text.legend = titles$text.legend
-    ) +
-    geom_line(size=rep(line.sizes,each=n),alpha=alf)
+    )
+
+  ## Argument: titles$legend.labels
+  if(ifelse(em.plot,length(titles$legend.labels)==length(em.labs),F)){
+    em.labs = titles$legend.labels
+  }
 
 
   # X and Y axis ------------------------------------------------------------
@@ -182,7 +210,6 @@ ram.equity.plot = function(
   # Titles ----------------------------------------------------------------
 
 
-
   ## Plot: Titles
 
   ## Argument: titles()
@@ -193,13 +220,7 @@ ram.equity.plot = function(
   y.title = titles$y ## y title
 
   ## Argument: legend.rows
-  lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
-  legend.labels = as.character(titles$legend.labels)
-
-  if(length(legend.labels)==0){
-    legend.labels = namer.raw
-  }
-
+  lr = ifelse(is.null(titles$legend.rows),0,titles$legend.rows)
 
   ## Plot: Add titles
   p = p +
@@ -229,7 +250,7 @@ ram.equity.plot = function(
       size = titles$caption.size))
 
 
-  # Emphasis ----------------------------------------------------------------
+  # H lines -----------------------------------------------------------------
 
 
   ## Plot: hline attributes
@@ -251,16 +272,20 @@ ram.equity.plot = function(
   }
 
   ## Final plot out
-  if(lr==0){
+  if(em.plot){
     p = p +
-      scale_color_manual(values=cols)
-  } else {
+      scale_color_manual(values = em.cols,labels=em.labs)
+  }
+
+  ## Argument: legend.rows
+  if(lr>0){
+    ## Add legend
     p = p +
-      scale_color_manual(values=cols,labels=legend.labels,breaks=namer) +
       guides(color=guide_legend(nrow=lr,
-                                override.aes = list(size = line.sizes.raw))) +
+                                override.aes = list(size = em.lines))) +
       theme(legend.position = 'top',legend.title = element_blank())
   }
 
   return(p)
 }
+
