@@ -126,7 +126,7 @@ ram.bootstrap.plot = function(
 
   cols1 = grDevices::colorRampPalette(col2hcl( # Gradient function
     ram.colors(lookup = c('dark.blue','cian'))))
-  cols1 = as.character(cols1(n))
+  cols1 = as.character(cols1(length(unique(d0$variable))))
   cols1 = as.character(sapply(cols1,function(z)rep(z,n)))
   alf = ifelse(is.null(emphasis$alpha),1,emphasis$alpha)
 
