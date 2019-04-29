@@ -122,7 +122,7 @@ ram.arguments = function(type='base',user.args){
         main = NULL,
         subtitle = NULL,
         legend.labels = NULL,
-        legend.rows = 2,
+        legend.rows = 1,
         text.legend = 10,
         caption = NULL,
         caption.size = 10,
@@ -133,7 +133,6 @@ ram.arguments = function(type='base',user.args){
       ),
 
       emphasis = list(
-        alpha = NULL,
         emph.column = NULL, # Can be numeric or character
         pct.column = NULL,
         hline = NULL,
@@ -204,7 +203,7 @@ ram.arguments = function(type='base',user.args){
         main = NULL,
         subtitle = NULL,
         legend.labels = NULL,
-        legend.rows = 2,
+        legend.rows = 1,
         text.legend = 10,
         caption = NULL,
         caption.size = 10,
@@ -215,7 +214,6 @@ ram.arguments = function(type='base',user.args){
       ),
 
       emphasis = list(
-        alpha = NULL,
         emph.column = NULL, # Can be numeric or character
         pct.column = NULL,
         hline = NULL,

@@ -80,6 +80,7 @@ ram.equity.plot = function(
 
   # Colors, Line Sizes, Legend Titles, Empghasis ----------------------------
 
+
   ## Plot: Colors and line sizes
   cols = ram.colors(ncol(dat)-1)
 
@@ -88,16 +89,6 @@ ram.equity.plot = function(
 
   ## Data: Naming order
   namer = namer.raw = names(dat)[-ncol(dat)]
-
-  ## Argument: titles$legend.labels
-  if(!is.null(titles$legend.labels) & length(titles$legend.labels)==(ncol(dat)-1)){
-    tmp = dat[,-ncol(dat)]
-    names(tmp) = titles$legend.labels
-    tmp = cbind(tmp,dat[,ncol(dat)])
-  } else if (!is.null(titles$legend.labels) & length(titles$legend.labels)!=ncol(dat)){
-    warning('Attribute set to default: number of legend names must match dat',
-            call. = FALSE, domain = NA)
-  }
 
 
   # Column Emphasis ---------------------------------------------------------
@@ -119,7 +110,7 @@ ram.equity.plot = function(
     corder = c(ew,which(!1:length(namer)%in%ew))
     corder = match(1:length(namer),corder)
 
-    dorder = c(which(!1:length(namer)%in%ew),rev(ew))
+    dorder = c(rev(which(!1:length(namer)%in%ew)),rev(ew))
     cols = (cols[corder])[dorder]
 
     line.sizes[ew] = 1.5
@@ -127,7 +118,8 @@ ram.equity.plot = function(
     line.sizes = line.sizes[dorder]
 
   } else {
-    dorder = 1:length(namer)
+    dorder = length(namer):1
+    cols = rev(cols)
   }
 
 
@@ -140,7 +132,7 @@ ram.equity.plot = function(
 
   ## Argument: emphasis$alpha
   alf = emphasis$alpha
-  if(is.null(alf))alf = 1
+  if(is.null(alf))alf=1
 
   ## Plot: Base build
   p = ggplot(datplot, aes(x = idx,y=value,color=variable)) +

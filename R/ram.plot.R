@@ -39,6 +39,7 @@ ram.plot = function(
   plot.type = 'equity',
   start.date = NULL,
   end.date = NULL,
+  time.ends = NULL,
   render = T,
 
   x.attributes = list(
@@ -107,6 +108,8 @@ ram.plot = function(
     n.samples = 1000,
     lw=0.5
   ),
+
+  pf = list(NULL),
 
   output = list(
     file.name = NULL,
@@ -191,6 +194,12 @@ ram.plot = function(
         dat = dat[paste0(as.character(start.date),'::')]
       }
     }
+
+    if(!is.null(time.ends)){
+      eps = endpoints(dat,as.character(time.ends[1]),as.numeric(time.ends[2]))
+      dat = dat[index(dat)[eps]]
+    }
+
   }
 
 
@@ -212,6 +221,38 @@ ram.plot = function(
 
   ### Data standardization
   dat = dat.raw = ram.dat.standard(dat)
+
+
+  # Portfolio Module --------------------------------------------------------
+
+
+  if(!all(sapply(pf,is.null))){
+    npf = length(pf)
+
+    # Deal with naming issue
+    pfnamer = names(pf)
+    wh = as.numeric(sapply(pfnamer,function(z)length(strsplit(z,'')[[1]])))
+    wh = which(wh==0)
+
+    if(length(wh)>0){
+      pfnamer_temp = paste0('Portfolio ',wh)
+      pfnamer[wh] = pfnamer_temp
+    }
+
+    pf.out = do.call(cbind,lapply(1:npf,function(i){
+      pf.weights = pf[[i]]
+      pf.prices = dat[,names(pf[[i]]),drop=F]
+      pf.rets = ifna(log(pf.prices/mlag(pf.prices)),0)
+      eq.rets = pf.rets * expand.rows(pf.weights,nrow(pf.rets))
+      eq.rets = Matrix::rowSums(eq.rets,na.rm = T)
+      eq.out = pf.prices[,1]*NA
+      eq.out[] = cumprod(1+eq.rets)
+      return(eq.out)
+    }))*100
+    names(pf.out) = pfnamer
+    dat = dat.raw = pf.out
+  }
+
 
   ### Data transform for Equity and Scatter Plots
   if(plot.type%in%c('equity','scatter','transition','bootstrap')){
@@ -282,7 +323,7 @@ ram.plot = function(
 
     emphasis$show.best.fit = F
     if(plot.type=='correlation'){
-      dat = ram.preplot(cor(dat),'correlation')
+      dat = ram.preplot(cor(dat,use = 'pairwise.complete'),'correlation')
     } else {
       dat = ram.preplot(dat,'melt')
       emphasis$density = T

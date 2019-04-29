@@ -76,7 +76,8 @@ ram.correlation.plot = function(
       coord_fixed() +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs
+        text.yaxis = y.attributes$text.labs,
+        text.legend = titles$text.legend
       ) +
       geom_text(aes(Var2, Var1, label = value),
                 color = "black", size = 4) +
@@ -92,7 +93,8 @@ ram.correlation.plot = function(
       geom_density(alpha=(0.5)) +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs
+        text.yaxis = y.attributes$text.labs,
+        text.legend = titles$text.legend
       )
   }
 
