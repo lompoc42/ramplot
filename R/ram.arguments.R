@@ -115,7 +115,8 @@ ram.arguments = function(type='base',user.args){
         labs = NULL,
         show.values = T,
         text.labs = 12,
-        text.vals = 2
+        text.vals = 2,
+        trans.percent = F
       ),
 
       titles = list(
@@ -192,7 +193,7 @@ ram.arguments = function(type='base',user.args){
         breaks = NULL,
         labs = NULL,
         trans.log = T,
-        trans.percent = F,
+        trans.percent = T,
         show.values = T,
         currency = '$',
         text.labs = 12,

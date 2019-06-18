@@ -110,7 +110,7 @@ ram.dat.standard = function(dat){
       } else {
         ## No dates found in columns. Try rownames.
         idx = ram.date.out(rownames(dat))
-        if(!is.null(idx)){
+        if(!any(sapply(idx,is.na))&!is.null(idx)){
           # Dates found in rownames
           out = xts(coredata(dat),idx)
         } else {
