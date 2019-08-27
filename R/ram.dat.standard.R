@@ -10,8 +10,6 @@
 #'
 ram.dat.standard = function(dat){
 
-  print('starting')
-
   ## Inner functions.
   ## Re-formats ReSolve database date formats into R-friendliness
   ram.daterip = function(x){
@@ -45,7 +43,7 @@ ram.dat.standard = function(dat){
 
       ## Conditions for standard date formats
       c1 = !all(is.na(as.character(strptime(dat, "%Y-%m-%d %H:%M"))))
-      c2 = all(nchar(as.character(dat))==10 | nchar(as.character(dat))==8)
+      c2 = all(nchar(as.character(dat))==10)
       c3 = !inherits(try(ram.daterip(dat),T),'try-error')
 
       ## Attempt to extract time data
@@ -69,8 +67,6 @@ ram.dat.standard = function(dat){
 
   if(is.vector(dat)){
 
-    print('vector detected')
-
     #### Yes data is a vector.
 
     ## This attempts to convert the vector names into dates
@@ -91,37 +87,28 @@ ram.dat.standard = function(dat){
     ### Data is not a vector. Is it a matrix or dataframe?
   } else if (is.matrix(dat) | is.data.frame(dat)){
 
-    print('mat or df detected')
-
     ### Make sure dat is not already in acceptable xts format.
     xts.try = try(try.xts(dat),T)
 
     if(inherits(xts.try,'try-error')){
-
-      print('dat is not an xts')
 
       ## First let's put it all on even ground.
       dat = as.data.frame(dat)
       cnames = colnames(dat)
 
       ## Try to identify dates in the columns.
-      print('testing columns for dates')
+      dates.try = lapply(dat,ram.date.out)
+      wh = !sapply(dates.try,is.null)
 
-      dates.try = !sapply(lapply(dat,ram.date.out),is.null)
-
-      if(length(which(dates.try))>0){
-
-        print('dates found in columns')
+      if(length(which(wh))>0){
 
         ## Dates found in columns
-        wh = first(which(dates.try))
+        wh = as.numeric(head(which(wh),1))
         idx = ram.date.out(dat[,wh])
         out = xts(coredata(dat[,-wh]),idx)
         colnames(out) = cnames[-wh]
 
       } else {
-        print('Last chances')
-
         ## No dates found in columns. Try rownames.
         idx = ram.date.out(rownames(dat))
         if(!any(sapply(idx,is.na))&!is.null(idx)){
@@ -143,15 +130,12 @@ ram.dat.standard = function(dat){
     stop('Data must be a vector, matrix, or data frame.', call. = FALSE, domain = NA)
   }
 
-  print('finishing up')
   cn = names(dat)
   if(is.xts(out)){
-    print('out is an xts object')
     tmp = as.data.frame(out)
     tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
     out = xts(tmp,index(out))
   } else {
-    print('out is NOT an xts object')
     out = out[,cn[cn%in%names(out)],drop=FALSE]
   }
 
