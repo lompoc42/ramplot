@@ -10,6 +10,8 @@
 #'
 ram.dat.standard = function(dat){
 
+  print('starting')
+
   ## Inner functions.
   ## Re-formats ReSolve database date formats into R-friendliness
   ram.daterip = function(x){
@@ -67,6 +69,8 @@ ram.dat.standard = function(dat){
 
   if(is.vector(dat)){
 
+    print('vector detected')
+
     #### Yes data is a vector.
 
     ## This attempts to convert the vector names into dates
@@ -87,19 +91,26 @@ ram.dat.standard = function(dat){
     ### Data is not a vector. Is it a matrix or dataframe?
   } else if (is.matrix(dat) | is.data.frame(dat)){
 
+    print('mat or df detected')
+
     ### Make sure dat is not already in acceptable xts format.
     xts.try = try(try.xts(dat),T)
 
     if(inherits(xts.try,'try-error')){
+
+      print('dat is not an xts')
 
       ## First let's put it all on even ground.
       dat = as.data.frame(dat)
       cnames = colnames(dat)
 
       ## Try to identify dates in the columns.
+      print('testing columns for dates')
       dates.try = sapply(dat,function(x){!is.null(ram.date.out(x))})
 
       if(length(which(dates.try))>0){
+
+        print('dates found in columns')
 
         ## Dates found in columns
         wh = first(which(dates.try))
@@ -108,6 +119,8 @@ ram.dat.standard = function(dat){
         colnames(out) = cnames[-wh]
 
       } else {
+        print('Last chances')
+
         ## No dates found in columns. Try rownames.
         idx = ram.date.out(rownames(dat))
         if(!any(sapply(idx,is.na))&!is.null(idx)){
@@ -129,12 +142,15 @@ ram.dat.standard = function(dat){
     stop('Data must be a vector, matrix, or data frame.', call. = FALSE, domain = NA)
   }
 
+  print('finishing up')
   cn = names(dat)
   if(is.xts(out)){
+    print('out is an xts object')
     tmp = as.data.frame(out)
     tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
     out = xts(tmp,index(out))
   } else {
+    print('out is NOT an xts object')
     out = out[,cn[cn%in%names(out)],drop=FALSE]
   }
 
