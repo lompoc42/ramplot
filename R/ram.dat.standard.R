@@ -89,8 +89,6 @@ ram.dat.standard = function(dat){
     ### Data is not a vector. Is it a matrix or dataframe?
   } else if (is.matrix(dat) | is.data.frame(dat)){
 
-    print('Data frame detected')
-
     ### Make sure dat is not already in acceptable xts format.
     xts.try = try(try.xts(dat),T)
 
