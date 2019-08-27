@@ -54,7 +54,8 @@ ram.bar.plot = function(
     secondary.column = NULL,
     show.best.fit = T,
     waterfall = F
-  )
+  ),
+  raw.out = F
 
 ){
 
@@ -134,6 +135,8 @@ ram.bar.plot = function(
       stat='identity')
 
   }
+
+  if(raw.out) return(list(plotObject=p,dat=dat))
 
 
   # Emphasis --------------------------------------------------------------

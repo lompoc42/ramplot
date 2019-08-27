@@ -70,7 +70,9 @@ ram.bootstrap.plot = function(
     resampled=F,
     n.samples = 1000,
     lw=0.5
-  )
+  ),
+  raw.out = F
+
 ){
 
   # Colors, Line Sizes, Legend Titles, Empghasis ----------------------------
@@ -165,6 +167,8 @@ ram.bootstrap.plot = function(
                       size = em.lines,
                       show.legend = T)
   }
+
+  if(raw.out) return(list(plotObject=p,dat=dat))
 
   ## Plot: theme
   p = p +
@@ -288,4 +292,3 @@ ram.bootstrap.plot = function(
 
   return(p)
 }
-

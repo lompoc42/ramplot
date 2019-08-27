@@ -63,7 +63,8 @@ ram.ef.plot = function(
     resampled=F,
     n.samples = 1000,
     lw=0.5
-  )
+  ),
+  raw.out = F
 
 ){
 
@@ -105,9 +106,10 @@ ram.ef.plot = function(
     geom_point(size=ef$lw) +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs,
-      text.legend = titles$text.legend
+      text.yaxis = y.attributes$text.labs
     )
+
+  if(raw.out) return(list(plotObject=p,dat=dat))
 
 
   ##########################################################################

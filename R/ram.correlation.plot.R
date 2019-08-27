@@ -52,7 +52,8 @@ ram.correlation.plot = function(
     secondary.column = NULL,
     show.best.fit = T,
     density = T
-  )
+  ),
+  raw.out = F
 
 ){
 
@@ -76,8 +77,7 @@ ram.correlation.plot = function(
       coord_fixed() +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs,
-        text.legend = titles$text.legend
+        text.yaxis = y.attributes$text.labs
       ) +
       geom_text(aes(Var2, Var1, label = value),
                 color = "black", size = 4) +
@@ -93,10 +93,11 @@ ram.correlation.plot = function(
       geom_density(alpha=(0.5)) +
       ram.theme(
         text.xaxis = x.attributes$text.labs,
-        text.yaxis = y.attributes$text.labs,
-        text.legend = titles$text.legend
+        text.yaxis = y.attributes$text.labs
       )
   }
+
+  if(raw.out) return(list(plotObject=p,dat=dat))
 
 
   # Titles and tilt -----------------------------------------------------

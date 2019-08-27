@@ -44,7 +44,8 @@ ram.scatter.plot = function(
     primary.column = 1,
     secondary.column = NULL,
     show.best.fit = T
-  )
+  ),
+  raw.out = F
 
 ){
 
@@ -62,8 +63,7 @@ ram.scatter.plot = function(
   p = ggplot(dat, aes(x=dat[,primary.column])) +
     ram.theme(
       text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs,
-      text.legend = titles$text.legend
+      text.yaxis = y.attributes$text.labs
     ) +
     geom_point(
       aes(y=comp, color=names(dat)[secondary.column]),
@@ -80,6 +80,8 @@ ram.scatter.plot = function(
         arrow = arrow(length = unit(2.5, 'mm'))
       )
   }
+
+  if(raw.out) return(list(plotObject=p,dat=dat))
 
 
 
@@ -173,7 +175,7 @@ ram.scatter.plot = function(
     )
   }
 
-  if(lr>=1){
+  if(lr>1){
     p = p + guides(colour = guide_legend(nrow = lr))
   }
 

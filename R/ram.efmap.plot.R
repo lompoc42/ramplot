@@ -44,7 +44,8 @@ ram.efmap.plot = function(
     secondary.column = NULL,
     show.best.fit = T,
     ef.order = 'sharpe'
-  )
+  ),
+  raw.out = F
 ){
 
 
@@ -65,6 +66,8 @@ ram.efmap.plot = function(
       text.xaxis = x.attributes$text.labs,
       text.yaxis = y.attributes$text.labs
     )
+
+  if(raw.out) return(list(plotObject=p,dat=dat))
 
 
   # X and Y axis ------------------------------------------------------------
@@ -101,7 +104,7 @@ ram.efmap.plot = function(
     p = p + scale_y_continuous(breaks = y.attributes$breaks,
                                labels= y.attributes$labs)
   } else {
-    p = p + scale_y_continuous()
+    p = p + scale_y_continuous(labels = scales::percent)
   }
 
 
@@ -115,6 +118,7 @@ ram.efmap.plot = function(
   main.caption = titles$caption ## caption
   x.title = titles$x ## x title
   y.title = titles$y ## y title
+  if(is.null(y.title))y.title = 'Portfolio Weight'
 
   ## Argument: legend.rows
   lr = ifelse(is.null(titles$legend.rows),1,titles$legend.rows)
