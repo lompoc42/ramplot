@@ -96,7 +96,7 @@ ram.dat.standard = function(dat){
 
     if(inherits(xts.try,'try-error')){
 
-      ## First let's put it all on even ground.
+      ## First let's put it all on even ground
       dat = as.data.frame(dat)
       cnames = colnames(dat)
 
