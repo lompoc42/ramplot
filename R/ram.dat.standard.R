@@ -130,6 +130,7 @@ ram.dat.standard = function(dat){
   }
 
   cn = names(dat)
+
   if(is.xts(out)){
     tmp = as.data.frame(out)
     tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
