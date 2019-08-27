@@ -41,6 +41,7 @@ ram.plot = function(
   end.date = NULL,
   time.ends = NULL,
   render = T,
+  raw.out = F,
 
   x.attributes = list(
     show.day = F,
@@ -116,8 +117,8 @@ ram.plot = function(
     file.type = 'pdf',
     width = 10,
     height = 5
-  )
-
+  ),
+  ...
 ){
 
 
@@ -515,10 +516,12 @@ ram.plot = function(
 
     ## Argument: y.attributes$currency
     if(!is.null(y.attributes$currency)&!y.attributes$trans.percent){
-      y.labs = paste0(
-        as.character(y.attributes$currency),
-        formatC(y.labs, format="f", digits=0, big.mark=",")
-      )
+      if(all(dat[,1]>0)){
+        y.labs = paste0(
+          as.character(y.attributes$currency),
+          formatC(y.labs, format="f", digits=0, big.mark=",")
+        )
+      }
     }
 
     ## Argument: update y.attribute settings
@@ -535,7 +538,7 @@ ram.plot = function(
     y.attributes$breaks = y.breaks
     y.attributes$labs = y.labs
 
-  } else if (plot.type%in%c('bar','waterfall','transition')){
+  } else if (plot.type%in%c('bar','waterfall')){
 
     if(plot.type=='bar'){
       if(!'idx'%in%names(dat)){
@@ -555,10 +558,10 @@ ram.plot = function(
         }
       }
 
-    } else if (plot.type%in%c('waterfall','transition')){
+    } else if (plot.type%in%c('waterfall')){
 
       ## Waterfall use cases
-      if(dat[nrow(dat),1]==1|plot.type=='transition'){
+      if(dat[nrow(dat),1]==1){
         y.breaks = c(0,0.25,0.5,0.75,1)
         y.labs = paste0(comma(y.breaks* 100), "%")
       } else {
@@ -576,6 +579,32 @@ ram.plot = function(
 
     ## This is here because it needs to call the bar function.
     if(plot.type=='waterfall') plot.type = 'bar'
+
+  } else if (plot.type%in%c('transition')){
+
+    if('idx'%in%colnames(dat)){
+      wh = which(colnames(dat)%in%'idx')
+      temp = Matrix::rowSums(as.matrix(dat[,-wh]),na.rm = T)
+      temp2 = as.numeric(as.matrix(dat[,-wh]))
+      if(any(min(temp2,na.rm = T)<temp)) temp = c(temp,min(temp2,na.rm = T))
+      if(any(max(temp2,na.rm = T)>temp)) temp = c(temp,max(temp2,na.rm = T))
+    } else {
+      temp = Matrix::rowSums(as.matrix(dat),na.rm = T)
+      temp2 = as.numeric(as.matrix(dat))
+      if(any(min(temp2,na.rm = T)<temp)) temp = c(temp,min(temp2,na.rm = T))
+      if(any(max(temp2,na.rm = T)>temp)) temp = c(temp,max(temp2,na.rm = T))
+    }
+
+    if(all(temp>=0)&all(temp<=1)){
+      y.breaks = c(0,0.25,0.5,0.75,1)
+      y.labels = paste0(comma(y.breaks* 100), "%")
+    } else {
+      y.breaks = as.numeric(pretty(sort(round(temp,4))))
+      y.labels = paste0(comma(y.breaks* 100), "%")
+    }
+
+    y.attributes$breaks = y.breaks
+    y.attributes$labs = y.labels
 
   } else if (plot.type%in%c('efmap','ef')){
 
@@ -615,14 +644,26 @@ ram.plot = function(
   y.attributes = args.final$y.attributes
   titles = args.final$titles
   emphasis = args.final$emphasis
+  argsExtra = list(...)
 
-  ## Final Plot Call
-  plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
-  out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
-  out = out +
-    theme(
-      text = element_text(family='Helvetica Neue')
-    )
+  if(raw.out==F & length(argsExtra)==0){
+    ## Final Plot Call
+    plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
+    out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
+  } else if (length(argsExtra)==0) {
+    ## Final Plot Call
+    plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
+    out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis,raw.out=T)
+    render=F
+  } else {
+    ## Final Plot Call
+    plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
+    tempOut = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis,raw.out=T)
+    out = tempOut$plotObject
+    for(z in 1:length(argsExtra)){
+      out =  out + argsExtra[[z]]
+    }
+  }
 
 
   # Output ------------------------------------------------------------------

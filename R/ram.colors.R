@@ -43,8 +43,7 @@
 #' @return NULL
 #' @export
 #'
-ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
-
+ram.colors = function(n,pcolor = '#00488d',lookup = NULL){
 
   expand.cols = function(dm, n){
     matrix(rep(dm, n), ncol = n)
@@ -52,10 +51,6 @@ ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
 
   expand.rows = function(dm, n){
     t(expand.cols(dm, n))
-  }
-
-  if(!is.null(lookup)){
-    n = min(n,20)
   }
 
   ac = c(
@@ -78,18 +73,18 @@ ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
     grey1 = '#293645',
     black = '#000000',
     grey3 = '#88949e',
-    slate = '#698fa3',
-    dark.orange = '#9c3000'
+    slate = '#698fa3'
 
   )
 
   if(is.null(lookup)){
+
     mat = t(col2rgb(ac))
 
     ## Argument: intial color
     c1 = ifelse(pcolor%in%ac,pcolor,as.character(ac[pcolor]))
     wh = which(ac%in%c1)
-    b1 = sqrt(rowSums((expand.rows(mat[wh,],20) - mat[-wh,])^2))
+    b1 = sqrt(rowSums((expand.rows(mat[wh,],19) - mat[-wh,])^2))
     c2 = ac[which.max(b1)+1]
     wh = which.min(abs(b1-(b1[which.max(b1)]/2)))
     c3 = ac[wh]
@@ -103,18 +98,19 @@ ram.colors = function(n=1,pcolor = '#00488d',lookup = NULL){
       mat = t(col2rgb(ac))
 
       b2 = sqrt(rowSums((expand.rows(b1,nrow(mat)) - mat)^2))
-      co1 = ac[which.max(b2)+1]
-      wh = which.min(abs(b2-(b2[which.max(b2)]/2)))
+      wh2 = which.max(b2[names(ac)])
+      co1 = ac[wh2]
+      wh = which.min(abs(b2-(b2[wh2]/2)))
       co2 = ac[wh]
       cols = c(cols,co1,co2)
     }
 
     cols = c(cols,ac[which(!as.character(ac)%in%as.character(cols))])
     cols = head(as.character(cols),n)
-  } else {
-    if(!all(lookup%in%names(ac))){
-      stop('No color by that name or number.', call. = FALSE, domain = NA)
+    if(length(cols)<n){
+      cols = c(cols,sample(rainbow(1000),n-length(cols)))
     }
+  } else {
     cols = na.omit(as.character(ac[lookup]))
   }
   return(cols)

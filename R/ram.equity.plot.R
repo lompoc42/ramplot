@@ -74,7 +74,8 @@ ram.equity.plot = function(
     resampled=F,
     n.samples = 1000,
     lw=0.5
-  )
+  ),
+  raw.out = F
 ){
 
 
@@ -142,6 +143,8 @@ ram.equity.plot = function(
       text.legend = titles$text.legend
     ) +
     geom_line(size=rep(line.sizes,each=n),alpha=alf)
+
+  if(raw.out) return(list(plotObject=p,dat=datplot))
 
 
   # X and Y axis ------------------------------------------------------------

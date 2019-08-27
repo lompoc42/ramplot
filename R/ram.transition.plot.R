@@ -67,14 +67,27 @@ ram.transition.plot = function(
   dat$idx = 1:nrow(dat)
   dat = melt(dat,id='idx')
 
-  ## Plot: Build base plot
-  p = ggplot(dat, aes(x=idx,y=value,fill=variable)) +
-    geom_area(position = 'stack') +
-    ram.theme(
-      text.xaxis = x.attributes$text.labs,
-      text.yaxis = y.attributes$text.labs,
-      text.legend = titles$text.legend
-    )
+  if(all(dat$value>=0&dat$value<=1)){
+    ## Plot: Build base plot
+    p = ggplot(dat, aes(x=idx,y=value,fill=variable)) +
+      geom_area(position = 'stack') +
+      ram.theme(
+        text.xaxis = x.attributes$text.labs,
+        text.yaxis = y.attributes$text.labs
+      )
+  } else {
+    dat$pos = ifelse(dat$value>=0,dat$value,0)
+    dat$neg = ifelse(dat$value<0,dat$value,-1e-36)
+
+    ## Plot: Build base plot
+    p = ggplot(dat) +
+      geom_area(aes(x=idx,y=pos,fill=variable)) +
+      geom_area(aes(x=idx,y=neg,fill=variable)) +
+      ram.theme(
+        text.xaxis = x.attributes$text.labs,
+        text.yaxis = y.attributes$text.labs
+      )
+  }
 
   # X and Y axis ------------------------------------------------------------
 
@@ -141,8 +154,8 @@ ram.transition.plot = function(
     )
   }
 
-  if(lr>=1){
-    p = p + guides(colour = guide_legend(nrow = lr))
+  if(lr>1){
+    p = p + guides(fill = guide_legend(nrow = lr))
   }
 
 
