@@ -54,7 +54,7 @@ ram.dat.standard = function(dat){
         out = strptime(dat, "%Y-%m-%d %H:%M")
       } else if (c2) {
         # Standard date data
-        out = as.Date(as.numeric(dat))
+        out = as.Date(dat)
       } else if (c3) {
         # ReSolve formatted dates
         out = ram.daterip(dat)
@@ -106,7 +106,8 @@ ram.dat.standard = function(dat){
 
       ## Try to identify dates in the columns.
       print('testing columns for dates')
-      dates.try = sapply(dat,function(x){!is.null(ram.date.out(x))})
+
+      dates.try = !sapply(lapply(dat,ram.date.out),is.null)
 
       if(length(which(dates.try))>0){
 
