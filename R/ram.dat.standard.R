@@ -96,6 +96,8 @@ ram.dat.standard = function(dat){
 
     if(inherits(xts.try,'try-error')){
 
+      print('Dat not in xts form')
+
       ## First let's put it all on even ground.
       dat = as.data.frame(dat)
       cnames = colnames(dat)
@@ -106,6 +108,8 @@ ram.dat.standard = function(dat){
 
       if(length(which(dates.try))>0){
 
+        print('dates found via date.out')
+
         ## Dates found in columns
         wh = first(which(dates.try))
         idx = ram.date.out(dat[,wh])
@@ -114,6 +118,8 @@ ram.dat.standard = function(dat){
 
       } else if (length(which(dates.try2))>0) {
 
+        print('dates found via daterip')
+
         ## Dates found in columns
         wh = first(which(dates.try2))
         idx = ram.daterip(dat[,wh])
@@ -121,6 +127,9 @@ ram.dat.standard = function(dat){
         colnames(out) = cnames[-wh]
 
       } else {
+
+        print('last chances')
+
         ## No dates found in columns. Try rownames.
         idx = ram.date.out(rownames(dat))
         if(!any(sapply(idx,is.na))&!is.null(idx)){
@@ -144,12 +153,16 @@ ram.dat.standard = function(dat){
 
   cn = names(dat)
   if(is.xts(out)){
+    print('out is an XTS')
     tmp = as.data.frame(out)
     tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
     out = xts(tmp,index(out))
   } else {
+    print('out is not an XTS')
     out = out[,cn[cn%in%names(out)],drop=FALSE]
   }
+
+  print('all done')
 
   return(out)
 
