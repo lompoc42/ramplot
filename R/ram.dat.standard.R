@@ -13,14 +13,16 @@ ram.dat.standard = function(dat){
   ## Inner functions.
   ## Re-formats ReSolve database date formats into R-friendliness
   ram.daterip = function(x){
-    daterip = as.Date(paste(
+
+    daterip = try(as.Date(paste(
       # year
       substr(x, 1, 4),
       # month
       substr(x, 5, 6),
       # day
       substr(x, 7, 8),
-      sep = "-"))
+      sep = "-")),T)
+    if(inherits(daterip,'try-error'))daterip=NULL
     return(daterip)
   }
 
@@ -87,6 +89,8 @@ ram.dat.standard = function(dat){
     ### Data is not a vector. Is it a matrix or dataframe?
   } else if (is.matrix(dat) | is.data.frame(dat)){
 
+    print('Data frame detected')
+
     ### Make sure dat is not already in acceptable xts format.
     xts.try = try(try.xts(dat),T)
 
@@ -97,14 +101,22 @@ ram.dat.standard = function(dat){
       cnames = colnames(dat)
 
       ## Try to identify dates in the columns.
-      dates.try = lapply(dat,ram.date.out)
-      wh = !sapply(dates.try,is.null)
+      dates.try = sapply(dat,function(x){!is.null(ram.date.out(x))})
+      dates.try2 = sapply(dat,function(x){!is.null(ram.daterip(as.numeric(x)))})
 
-      if(length(which(wh))>0){
+      if(length(which(dates.try))>0){
 
         ## Dates found in columns
-        wh = as.numeric(head(which(wh),1))
+        wh = first(which(dates.try))
         idx = ram.date.out(dat[,wh])
+        out = xts(coredata(dat[,-wh]),idx)
+        colnames(out) = cnames[-wh]
+
+      } else if (length(which(dates.try2))>0) {
+
+        ## Dates found in columns
+        wh = first(which(dates.try2))
+        idx = ram.daterip(dat[,wh])
         out = xts(coredata(dat[,-wh]),idx)
         colnames(out) = cnames[-wh]
 
