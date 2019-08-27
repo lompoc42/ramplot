@@ -102,7 +102,7 @@ ram.dat.standard = function(dat){
       if(length(which(dates.try))>0){
 
         ## Dates found in columns
-        wh = first(which(dates.try))
+        wh = head(which(dates.try),1)
         idx = ram.date.out(dat[,wh])
         out = xts(coredata(dat[,-wh]),idx)
         colnames(out) = cnames[-wh]
@@ -130,7 +130,6 @@ ram.dat.standard = function(dat){
   }
 
   cn = names(dat)
-
   if(is.xts(out)){
     tmp = as.data.frame(out)
     tmp = tmp[,cn[cn%in%names(tmp)],drop=FALSE]
