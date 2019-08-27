@@ -52,7 +52,7 @@ ram.dat.standard = function(dat){
         out = strptime(dat, "%Y-%m-%d %H:%M")
       } else if (c2) {
         # Standard date data
-        out = as.Date(dat)
+        out = as.Date(as.numeric(dat))
       } else if (c3) {
         # ReSolve formatted dates
         out = ram.daterip(dat)
