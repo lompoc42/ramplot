@@ -646,20 +646,20 @@ ram.plot = function(
   emphasis = args.final$emphasis
   argsExtra = list(...)
 
+  plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
+
   if(raw.out==F & length(argsExtra)==0){
-    ## Final Plot Call
-    plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
+
     out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
-  } else if (length(argsExtra)==0) {
-    ## Final Plot Call
-    plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
+
+  } else if (raw.out==T) {
+
     out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis,raw.out=T)
     render=F
-  } else {
-    ## Final Plot Call
-    plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
-    tempOut = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis,raw.out=T)
-    out = tempOut$plotObject
+
+  } else if (length(argsExtra)>0) {
+
+    out = plot.out(dat=dat,x.attributes,y.attributes,titles,emphasis)
     for(z in 1:length(argsExtra)){
       out =  out + argsExtra[[z]]
     }
