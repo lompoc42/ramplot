@@ -657,8 +657,7 @@ ram.plot = function(
   y.attributes = args.final$y.attributes
   titles = args.final$titles
   emphasis = args.final$emphasis
-  # argsExtra = list(...)
-  argsExtra=NULL
+  argsExtra = list(...)
 
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
 
