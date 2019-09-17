@@ -42,6 +42,7 @@ ram.plot = function(
   time.ends = NULL,
   render = T,
   raw.out = F,
+  adamLog = F,
 
   x.attributes = list(
     show.day = F,
@@ -599,10 +600,7 @@ ram.plot = function(
       y.breaks = c(0,0.25,0.5,0.75,1)
       y.labels = paste0(comma(y.breaks* 100), "%")
     } else {
-      if(y.attributes$trans.percent){
-        y.breaks = as.numeric(pretty(sort(round(temp,4))))
-        y.labels = paste0(comma(y.breaks* 100), "%")
-      } else if (y.attributes$trans.log) {
+      if(adamLog){
         dmat = dat[,-which(names(dat)%in%'idx')]
         start.val = head(as.numeric(dat.raw),1)
         scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
@@ -612,7 +610,7 @@ ram.plot = function(
         dat[,-which(names(dat)%in%'idx')] = dmat
       } else {
         y.breaks = as.numeric(pretty(sort(round(temp,4))))
-        y.breaks = y.labels = y.breaks[y.breaks>0]
+        y.labels = paste0(comma(y.breaks* 100), "%")
       }
     }
 
