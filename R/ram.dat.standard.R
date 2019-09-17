@@ -45,14 +45,14 @@ ram.dat.standard = function(dat){
 
       ## Conditions for standard date formats
       c1 = !all(is.na(as.character(strptime(dat, "%Y-%m-%d %H:%M"))))
-      c2 = all(nchar(as.character(dat))==10)
+      c2 = try(all(nchar(as.character(dat))==10),T)
       c3 = !inherits(try(ram.daterip(dat),T),'try-error')
 
       ## Attempt to extract time data
       if(c1){
         # Is minute data
         out = strptime(dat, "%Y-%m-%d %H:%M")
-      } else if (c2) {
+      } else if (ifelse(!inherits(c2,'try-error'),F,c2)) {
         # Standard date data
         out = as.Date(dat)
       } else if (c3) {

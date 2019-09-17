@@ -599,8 +599,21 @@ ram.plot = function(
       y.breaks = c(0,0.25,0.5,0.75,1)
       y.labels = paste0(comma(y.breaks* 100), "%")
     } else {
-      y.breaks = as.numeric(pretty(sort(round(temp,4))))
-      y.labels = paste0(comma(y.breaks* 100), "%")
+      if(y.attributes$trans.percent){
+        y.breaks = as.numeric(pretty(sort(round(temp,4))))
+        y.labels = paste0(comma(y.breaks* 100), "%")
+      } else if (y.attributes$trans.log) {
+        dmat = dat[,-which(names(dat)%in%'idx')]
+        start.val = head(as.numeric(dat.raw),1)
+        scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
+        y.breaks = scaler$breaks
+        y.labels = scaler$labs
+        dmat[] = coredata(scaler$dat)
+        dat[,-which(names(dat)%in%'idx')] = dmat
+      } else {
+        y.breaks = as.numeric(pretty(sort(round(temp,4))))
+        y.breaks = y.labels = y.breaks[y.breaks>0]
+      }
     }
 
     y.attributes$breaks = y.breaks
@@ -644,7 +657,8 @@ ram.plot = function(
   y.attributes = args.final$y.attributes
   titles = args.final$titles
   emphasis = args.final$emphasis
-  argsExtra = list(...)
+  # argsExtra = list(...)
+  argsExtra=NULL
 
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
 
@@ -693,7 +707,7 @@ ram.plot = function(
   if(render){
     print(out)
   } else {
-    out = out
+    return(out)
   }
 
 }
