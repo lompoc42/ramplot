@@ -475,7 +475,11 @@ ram.plot = function(
     dmat = dat[,-which(names(dat)%in%'idx')]
 
     ## Argument: y.attributes
-    if(!y.attributes$trans.percent&all(na.omit(as.numeric(as.matrix(dmat)))>0)){
+    s1 = !y.attributes$trans.percent
+    s2 = !y.attributes$trans.log
+    s3 = all(na.omit(as.numeric(as.matrix(dmat)))>0)
+
+    if(s1&!(s1&s2)&s3){
 
       start.val = y.attributes$start.val
       scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
@@ -516,7 +520,10 @@ ram.plot = function(
     dat[,-which(names(dat)%in%'idx')] = dmat
 
     ## Argument: y.attributes$currency
-    if(!is.null(y.attributes$currency)&!y.attributes$trans.percent){
+    s1 = !y.attributes$trans.percent
+    s2 = !is.null(y.attributes$currency)
+    s3 = !y.attributes$trans.log
+    if(s1&s2&!(s1&s3)){
       if(all(dat[,1]>0)){
         y.labs = paste0(
           as.character(y.attributes$currency),
