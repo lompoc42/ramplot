@@ -107,7 +107,13 @@ ram.dat.standard = function(dat){
         ## Dates found in columns
         wh = first(which(dates.try))
         idx = ram.date.out(dat[,wh])
-        out = xts(coredata(dat[,-wh]),idx)
+        datTemp = coredata(dat[,-wh,drop=F])
+        suppressWarnings(for(zz in 1:ncol(datTemp)){
+          if(is.factor(datTemp[,zz])){
+            datTemp[,zz] = as.numeric(as.matrix(datTemp[,zz]))
+          }
+        })
+        out = xts(coredata(datTemp),idx)
         colnames(out) = cnames[-wh]
 
       } else if (length(which(dates.try2))>0) {
@@ -115,8 +121,18 @@ ram.dat.standard = function(dat){
         ## Dates found in columns
         wh = first(which(dates.try2))
         idx = ram.daterip(dat[,wh])
-        out = xts(coredata(dat[,-wh]),idx)
+
+        datTemp = coredata(dat[,-wh,drop=F])
+        suppressWarnings(for(zz in 1:ncol(datTemp)){
+          if(is.factor(datTemp[,zz])){
+            datTemp[,zz] = as.numeric(as.matrix(datTemp[,zz]))
+          }
+        })
+        out = xts(coredata(datTemp),idx)
         colnames(out) = cnames[-wh]
+
+        # out = xts(coredata(dat[,-wh]),idx)
+        # colnames(out) = cnames[-wh]
 
       } else {
         ## No dates found in columns. Try rownames.
