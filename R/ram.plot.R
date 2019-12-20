@@ -475,14 +475,13 @@ ram.plot = function(
     dmat = dat[,-which(names(dat)%in%'idx')]
 
     ## Argument: y.attributes
-    s1 = !y.attributes$trans.percent
-    s2 = !y.attributes$trans.log
-    s3 = all(na.omit(as.numeric(as.matrix(dmat)))>0)
+    s1 = y.attributes$trans.log & all(na.omit(as.numeric(as.matrix(dmat)))>0)
+    s2 = y.attributes$trans.percent
 
-    if(s1&!(s1&s2)&s3){
-
+    ## Log scaler: Cannot be used with any non-positive values
+    if(s1){
       start.val = y.attributes$start.val
-      scaler = ram.scaler(dat.raw,start.val,ln=y.attributes$trans.log)
+      scaler = ram.scaler(dat.raw,start.val,ln=T)
       y.breaks = scaler$breaks
       y.labs = scaler$labs
       dmat[] = coredata(scaler$dat)
@@ -491,10 +490,10 @@ ram.plot = function(
       if(!is.null(emphasis$hline)&y.attributes$trans.log){
         emphasis$hline = log2(emphasis$hline)
       }
+    }
 
-      ## Argument: y.attributes$trans.percent
-    } else if (y.attributes$trans.percent) {
-
+    ## Percentage scaler
+    if(s2){
       dm2 = na.omit(as.numeric(as.matrix(dmat)))
 
       if(all(as.numeric(dm2)>=0&as.numeric(dm2)<=1)){
@@ -504,9 +503,9 @@ ram.plot = function(
         y.breaks = y.labs = pretty(as.numeric(as.matrix(dm2)))
         y.labs = paste0(comma(y.breaks* 100), "%")
       }
+    }
 
-    } else {
-
+    if(!s1&!s2){
       n = as.numeric(as.matrix(dmat))
       y.breaks = y.labs = pretty(as.numeric(as.matrix(dmat)))
 
@@ -514,7 +513,6 @@ ram.plot = function(
       if((length(n[n<1])/length(n))>0.5){
         y.labs = y.breaks
       }
-
     }
 
     dat[,-which(names(dat)%in%'idx')] = dmat
@@ -662,7 +660,8 @@ ram.plot = function(
   y.attributes = args.final$y.attributes
   titles = args.final$titles
   emphasis = args.final$emphasis
-  argsExtra = list(...)
+  # argsExtra = list(...)
+  argsExtra=NULL
 
   plot.out = getFunction(paste0('ram.',plot.type,'.plot'))
 

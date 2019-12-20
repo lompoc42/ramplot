@@ -193,7 +193,7 @@ ram.arguments = function(type='base',user.args){
         breaks = NULL,
         labs = NULL,
         trans.log = T,
-        trans.percent = T,
+        trans.percent = F,
         show.values = T,
         currency = '$',
         text.labs = 12,
