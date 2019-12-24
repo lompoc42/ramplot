@@ -9,6 +9,9 @@
 #' @return NULL
 #' @export
 #'
+#'
+#'
+
 ram.scatter.plot = function(
 
   dat,
